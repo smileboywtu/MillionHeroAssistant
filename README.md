@@ -5,6 +5,10 @@
 本软件使用了`汉王云ocr`API，参考了[wuditken/MillionHeroes
 ](https://github.com/wuditken/MillionHeroes)项目，目前主要改进了广告和配置问题，提供免费的云api，不需要用户自己注册[汉王api](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.730005.0.0.B1mZNd#sku=yuncode552300000)，如果发现不可用请扫描二维码联系。
 
+## 汉王OCR APPCode
+
+- 714501eede0b4ac9a75a11af64b3b4d7
+
 ## 部署
 
 1. 从python官网安装python3.6环境
