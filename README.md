@@ -10,9 +10,9 @@
 **notice**: 第一次使用汉王阿里云只需要0.01元／100条，所以如果没有了，可以自己注册阿里云账号购买（[汉王](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.10695662.1996646101.searchclickresult.2d006e393rEVI7#sku=yuncode552300000)）。
 - ~~714501eede0b4ac9a75a11af64b3b4d7~~
 
-## release
+## Release
 
-- 20179/1/9: baiduzhi.com 答案获取bug，增加长文本信息摘要算法，增加免费的百度ocr
+- 2017/1/9: baiduzhi.com 答案获取bug，增加长文本信息摘要算法,增加百度OCR
 
 ## 部署
 
