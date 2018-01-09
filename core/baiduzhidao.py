@@ -80,6 +80,9 @@ def parse_answer(urls, timeout=2):
                 parser = html.fromstring(text)
                 parts = parser.xpath(
                     "//*[contains(@id, 'best-answer')]//*[@class='line content']/*[contains(@id, 'best-content')]/text()")
+                if not parts:
+                    parts = parser.xpath(
+                        "//*[@id='wgt-answers']//*[contains(@class, 'answer-first')]//*[contains(@id, 'answer-content')]//span[@class='con']/text()")
                 final.append(" ".join(parts))
             except Exception as exc:
                 print("get url: {0} error: {1}".format(url, str(exc)))
