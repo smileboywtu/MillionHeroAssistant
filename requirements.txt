@@ -25,3 +25,4 @@ jieba==0.39
 nltk==3.2.5
 numpy==1.14.0
 sumy==0.7.0
+baidu-aip==2.0.0.1

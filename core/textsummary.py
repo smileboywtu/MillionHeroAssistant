@@ -24,4 +24,4 @@ def get_summary(long_text, sentences=SENTENCES_COUNT):
     stemmer = Stemmer(LANGUAGE)
     summarizer = Summarizer(stemmer)
     summarizer.stop_words = get_stop_words(LANGUAGE)
-    return [sentence for sentence in summarizer(parser.document, sentences)]
+    return [str(sentence) for sentence in summarizer(parser.document, sentences)]
