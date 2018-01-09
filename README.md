@@ -12,7 +12,7 @@
 
 ## release
 
-- 20179/1/9: baiduzhi.com 答案获取bug，增加长文本信息摘要算法
+- 20179/1/9: baiduzhi.com 答案获取bug，增加长文本信息摘要算法，增加免费的百度ocr
 
 ## 部署
 
