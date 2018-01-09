@@ -29,7 +29,7 @@ def get_text_from_image(image_data, app_id, app_key, app_secret, timeout=3):
     options["detect_language"] = "true"
     options["probability"] = "true"
 
-    result = client.basicGeneral(image_data, options)
+    result = client.basicAccurate(image_data, options)
     if "error_code" in result:
         print("baidu api error: ", result["error_msg"])
         return ""
