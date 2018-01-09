@@ -57,21 +57,19 @@ def main():
     )
     answers = filter(None, answers)
 
-    if text_summary:
-        for long_text in answers:
-            print('=' * 70)
-            long_text = long_text.replace("\u3000", "")
-            sentences = get_summary(long_text, summary_sentence_count)
+    for text in answers:
+        print('=' * 70)
+        text = text.replace("\u3000", "")
+        if len(text) > 120 and text_summary:
+            sentences = get_summary(text, summary_sentence_count)
+            sentences = filter(None, sentences)
             if not sentences:
-                print(long_text)
+                print(text)
             else:
-                sentences = filter(None, sentences)
                 print("\n".join(sentences))
-    else:
-        for ans in answers:
-            print('=' * 70)
-            ans = ans.replace("\u3000", "")
-            print("\n".join(textwrap.wrap(ans, width=45)))
+        else:
+            print("\n".join(textwrap.wrap(text, width=45)))
+
     end = time.time()
     print("use {0} 秒".format(end - start))
 
