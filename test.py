@@ -4,8 +4,7 @@
 import unittest
 from unittest import TestCase
 
-from config import default_answer_number
-from core.baiduzhidao import zhidao_search
+from core.baiduzhidao import search_result_number
 
 
 class OcrTestCase(TestCase):
@@ -26,25 +25,10 @@ class OcrTestCase(TestCase):
 
         with open("screenshots/text_area.png", "rb") as fp:
             message = get_text_from_image(fp.read(), app_id, app_key, app_secret, 5)
-            answers = zhidao_search(
-                keyword=message,
-                default_answer_select=default_answer_number,
-                timeout=5
-            )
-            answers = filter(None, answers)
-            print("".join(answers))
+            print(message)
 
-    # def test_hanwang_ocr(self):
-    #     """
-    #     test hanwang ocr
-    #
-    #     :return:
-    #     """
-    #     from core.ocr.hanwanocr import get_text_from_image
-    #     print("test hanwang ocr")
-    #     with open("screenshots/text_area2.png", "rb") as fp:
-    #         print(get_text_from_image(fp.read(), appcode=""))
-
+    def test_search_result_number(self):
+        print(search_result_number("唐朝"))
 
 
 if __name__ == "__main__":

@@ -50,7 +50,8 @@ def parse_answer_area(source_file, text_area_file):
     wide = image.size[0]
     print("screen width: {0}, screen height: {1}".format(image.size[0], image.size[1]))
 
-    region = image.crop((70, 200, wide - 70, 700))
+    # adjust it as need
+    region = image.crop((70, 200, wide - 70, 1300))
     region.save(text_area_file)
 
 

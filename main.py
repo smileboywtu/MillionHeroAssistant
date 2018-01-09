@@ -6,31 +6,19 @@
     Xi Gua video Million Heroes
 
 """
-import textwrap
 import time
 from argparse import ArgumentParser
 
+import operator
 from functools import partial
 
 from config import app_id
 from config import app_key
 from config import app_secret
 from config import data_directory
-from config import default_answer_number
-from config import hanwan_appcode
-from config import prefer
-from config import summary_sentence_count
-from config import text_summary
 from core.android import analyze_current_screen_text
-from core.baiduzhidao import zhidao_search
+from core.nearby import calculate_relation
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
-from core.ocr.hanwanocr import get_text_from_image as han_get_text
-from core.textsummary import get_summary
-
-if prefer[0] == "baidu":
-    get_text_from_image = partial(bai_get_text, app_id=app_id, app_key=app_key, app_secret=app_secret, timeout=5)
-elif prefer[0] == "hanwang":
-    get_text_from_image = partial(han_get_text, appcode=hanwan_appcode, timeout=3)
 
 
 def parse_args():
@@ -44,44 +32,58 @@ def parse_args():
     return parser.parse_args()
 
 
+def parse_question_and_answer(text_list):
+    question = ""
+    start = 0
+    for i, keyword in enumerate(text_list):
+        question += keyword
+        if "?" in keyword:
+            start = i + 1
+            break
+
+    question = question.split(".")[-1]
+    return question, text_list[start:]
+
+
 def main():
     args = parse_args()
     timeout = args.timeout
+    get_text_from_image = partial(
+        bai_get_text,
+        app_id=app_id,
+        app_key=app_key,
+        app_secret=app_secret,
+        timeout=timeout)
 
     start = time.time()
     text_binary = analyze_current_screen_text(
         directory=data_directory
     )
-    keyword = get_text_from_image(
+    keywords = get_text_from_image(
         image_data=text_binary,
     )
-    if not keyword:
+    if not keywords:
         print("text not recognize")
         return
 
-    keyword = keyword.split(r"．")[-1]
-    keywords = keyword.split(" ")
-    keyword = "".join([e.strip("\r\n") for e in keywords if e])
-    print("guess keyword: ", keyword)
-    answers = zhidao_search(
-        keyword=keyword,
-        default_answer_select=default_answer_number,
-        timeout=timeout
-    )
-    answers = filter(None, answers)
+    question, answers = parse_question_and_answer(keywords)
+    print("-" * 50)
+    print("Q: ", question)
+    print("-" * 50)
+    print("\n".join(answers))
+    print("-" * 50, "\n" * 2)
 
-    for text in answers:
-        print('=' * 70)
-        text = text.replace("\u3000", "")
-        if len(text) > 120 and text_summary:
-            sentences = get_summary(text, summary_sentence_count)
-            sentences = filter(None, sentences)
-            if not sentences:
-                print(text)
-            else:
-                print("\n".join(sentences))
-        else:
-            print("\n".join(textwrap.wrap(text, width=45)))
+    weight_li, final, index = calculate_relation(question, answers)
+    summary = {
+        a: b
+        for a, b in
+        zip(answers, weight_li)
+    }
+    summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
+    print("-" * 50)
+    print("\n".join([a + ":" + str(b) for a, b in summary_li]))
+    print("*" * 50)
+    print(summary_li[0][0])
 
     end = time.time()
     print("use {0} 秒".format(end - start))

@@ -21,7 +21,7 @@ def get_text_from_image(image_data, app_id, app_key, app_secret, timeout=3):
     :return:
     """
     client = AipOcr(appId=app_id, apiKey=app_key, secretKey=app_secret)
-    client.setConnectionTimeoutInMillis(timeout*1000)
+    client.setConnectionTimeoutInMillis(timeout * 1000)
 
     options = {}
     options["language_type"] = "CHN_ENG"
@@ -33,4 +33,4 @@ def get_text_from_image(image_data, app_id, app_key, app_secret, timeout=3):
     if "error_code" in result:
         print("baidu api error: ", result["error_msg"])
         return ""
-    return "".join([words["words"] for words in result["words_result"]])
+    return [words["words"] for words in result["words_result"]]
