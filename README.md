@@ -1,6 +1,6 @@
 ## 西瓜视频百万英雄助手
 
-本文的所有答案均来自百度知道的搜索，根据前两个投票最高的答案来，目前已经去除了广告，目前只支持android手机，程序运行时间是3秒左右（答题是10秒）。
+本文的所有答案均来自百度知道的搜索，根据前两个投票最高的答案来，目前已经去除了广告，只支持android手机，程序运行时间是3秒左右（答题是10秒）。
 
 本软件使用了`汉王云ocr`API，参考了[wuditken/MillionHeroes
 ](https://github.com/wuditken/MillionHeroes)项目，目前主要改进了广告和配置问题，提供免费的云api，不需要用户自己注册[汉王api](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.730005.0.0.B1mZNd#sku=yuncode552300000)，如果发现不可用请扫描二维码联系。
@@ -37,5 +37,11 @@
 想要交流学习或者联系充值汉王OCR的请扫描二维码联系(有效期7日)
 
 ![](./wechatcode/wechat.png)
+
+群已经满了100人了，需要邀请进群。
+
+请加wexin后邀请：
+
+![](./wechatcode/wechat-1.png)
 
 qq: 294101042
