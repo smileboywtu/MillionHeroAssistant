@@ -18,6 +18,7 @@ from config import app_secret
 from config import data_directory
 from config import default_answer_number
 from config import hanwan_appcode
+from config import image_compress_level
 from config import prefer
 from config import summary_sentence_count
 from config import text_summary
@@ -50,7 +51,8 @@ def main():
 
     start = time.time()
     text_binary = analyze_current_screen_text(
-        directory=data_directory
+        directory=data_directory,
+        compress_level=image_compress_level[0]
     )
     keyword = get_text_from_image(
         image_data=text_binary,
