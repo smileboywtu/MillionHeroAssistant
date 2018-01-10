@@ -12,6 +12,7 @@ from argparse import ArgumentParser
 
 from functools import partial
 
+from config import api_version
 from config import app_id
 from config import app_key
 from config import app_secret
@@ -29,7 +30,12 @@ from core.ocr.hanwanocr import get_text_from_image as han_get_text
 from core.textsummary import get_summary
 
 if prefer[0] == "baidu":
-    get_text_from_image = partial(bai_get_text, app_id=app_id, app_key=app_key, app_secret=app_secret, timeout=5)
+    get_text_from_image = partial(bai_get_text,
+                                  app_id=app_id,
+                                  app_key=app_key,
+                                  app_secret=app_secret,
+                                  api_version=api_version,
+                                  timeout=5)
 elif prefer[0] == "hanwang":
     get_text_from_image = partial(han_get_text, appcode=hanwan_appcode, timeout=3)
 

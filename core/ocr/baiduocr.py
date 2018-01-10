@@ -9,7 +9,7 @@
 from aip import AipOcr
 
 
-def get_text_from_image(image_data, app_id, app_key, app_secret, timeout=3):
+def get_text_from_image(image_data, app_id, app_key, app_secret, api_version=0, timeout=3):
     """
     Get image text use baidu ocr
 
@@ -17,16 +17,21 @@ def get_text_from_image(image_data, app_id, app_key, app_secret, timeout=3):
     :param app_id:
     :param app_key:
     :param app_secret:
+    :param api_version:
     :param timeout:
     :return:
     """
     client = AipOcr(appId=app_id, apiKey=app_key, secretKey=app_secret)
-    client.setConnectionTimeoutInMillis(timeout*1000)
+    client.setConnectionTimeoutInMillis(timeout * 1000)
 
     options = {}
     options["language_type"] = "CHN_ENG"
 
-    result = client.basicAccurate(image_data, options)
+    if api_version == 1:
+        result = client.basicAccurate(image_data, options)
+    else:
+        result = client.basicGeneral(image_data, options)
+
     if "error_code" in result:
         print("baidu api error: ", result["error_msg"])
         return ""
