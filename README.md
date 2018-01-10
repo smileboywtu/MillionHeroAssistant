@@ -1,14 +1,30 @@
 ## 西瓜视频百万英雄助手
 
-本文的所有答案均来自百度知道的搜索，根据前两个投票最高的答案来，目前已经去除了广告，只支持android手机，程序运行时间是3秒左右（答题是10秒）。
+参考了微信跳一跳助手的思路，通过截取手机上面的题目识别问题和答案。
+支持使用[汉王云 OCR ](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.730005.0.0.B1mZNd#sku=yuncode552300000)和[百度文字识别](https://cloud.baidu.com/product/ocr/general)。
 
-本软件使用了`汉王云ocr`API，参考了[wuditken/MillionHeroes
-](https://github.com/wuditken/MillionHeroes)项目，目前主要改进了广告和配置问题，提供免费的云api，不需要用户自己注册[汉王api](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.730005.0.0.B1mZNd#sku=yuncode552300000)，如果发现不可用请扫描二维码联系。
 
-## 汉王OCR APPCode
+本文的所有答案均来自百度知道的搜索，根据前两个投票最高的答案来，已经去除了广告，
+答案均来自百度知道，优先选择最佳答案，如果没有最佳答案，选择前两个靠前的答案。
 
-**notice**: 第一次使用汉王阿里云只需要0.01元／100条，所以如果没有了，可以自己注册阿里云账号购买（[汉王](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.10695662.1996646101.searchclickresult.2d006e393rEVI7#sku=yuncode552300000)）。
-- ~~714501eede0b4ac9a75a11af64b3b4d7~~
+如果答案内容过长，使用文本摘要算法，显示最重要的5句。
+
+移动端支持 Android / IOS 手机，程序运行时间是3秒左右（答题是10秒）。
+
+## 运行
+
+![](./wechatcode/master.png)
+
+
+## 汉王OCR 百度OCR
+
+**notice**: 第一次使用汉王阿里云只需要0.01元／100条，所以如果没有了，可以自己注册阿里云账号购买（[汉王](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.10695662.1996646101.searchclickresult.2d006e393rEVI7#sku=yuncode552300000)）。百度的注册开发者后创建应用就可以看见自己的 key 和 secret 。
+
+## 分支说明
+
+- master: 主要是 Android 手机使用，支持汉王和百度识别
+- knearby: 根据文本关联度思想，答案更加清晰，目前只支持百度识别
+- iso: 主要是苹果手机使用，支持百度和汉王 
 
 ## V2 文本关联相似度分析
 
@@ -56,8 +72,9 @@ K = count(Q&A) / (count(Q) * count(A))
 
 ## Release
 
-- 2017/1/9: baiduzhi.com 答案获取bug，增加长文本信息摘要算法,增加百度OCR
+- 2017/1/9： 修复答案获取bug，增加长文本信息摘要算法，增加百度OCR
 - 2017/1/9： 使用相似度猜测答案，请切换分支使用
+- 2017/1/10： 增加ios分支，修复master文本摘要bug
 
 ## 部署
 
@@ -69,20 +86,29 @@ K = count(Q&A) / (count(Q) * count(A))
 
 ## ADB工具配置
 
-以linux 为例：
+以 linux 为例：
 
-1. 下载android-platform-tools,访问[google](https://developer.android.google.cn/studio/releases/platform-tools.html)下载，默认mac,windows,linux均支持
-2. 配置环境变量，进入platform目录下面`export PATH=$(pwd):PATH`配置adb工具到系统的path下面
+1. 下载 android-platform-tools，访问[google](https://developer.android.google.cn/studio/releases/platform-tools.html)下载，默认 mac，windows， linux 均支持
+2. 配置环境变量，进入 platform 目录下面`export PATH=$(pwd):PATH`配置 adb 工具到系统的 path 下面
 3. 手机打开开发者模式
 4. 使用usb连接手机后信任，`adb devices`来检查是否有自己的设备，确认已经连接
 5. 接下来就进入百万英雄，等待有题目的时候就运行`python main.py`即可
 
+
+## 贡献者（不分先后）
+
+- [uniqhj](https://github.com/UniqHu)
+- wangfpp
+
+## 参考项目
+
+- [wuditken/MillionHeroes](https://github.com/wuditken/MillionHeroes)
+- [lingfengsan/MillionHero](https://github.com/lingfengsan/MillionHero)
+
+
 ## 交流学习
 
-想要交流学习或者联系充值汉王OCR的请扫描二维码联系(有效期7日)
-
-![](./wechatcode/wechat.png)
-
+想要交流学习请添加我的 wechat ,
 群已经满了100人了，需要邀请进群。
 
 请加wexin后邀请：
