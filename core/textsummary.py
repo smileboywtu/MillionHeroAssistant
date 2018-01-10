@@ -19,8 +19,18 @@ LANGUAGE = "chinese"
 SENTENCES_COUNT = 5
 
 
+def chinese_normalnize(long_text):
+    for char, repl in [(".", "。"), (",", "，"), (":", "："), ("?", "？"), ("!", "！"), (";", "；")]:
+        long_text = long_text.replace(char, repl)
+
+    if long_text.isupper():
+        return long_text.lower()
+
+    return long_text
+
+
 def get_summary(long_text, sentences=SENTENCES_COUNT):
-    parser = PlaintextParser.from_string(long_text, Tokenizer(LANGUAGE))
+    parser = PlaintextParser.from_string(chinese_normalnize(long_text), Tokenizer(LANGUAGE))
     stemmer = Stemmer(LANGUAGE)
     summarizer = Summarizer(stemmer)
     summarizer.stop_words = get_stop_words(LANGUAGE)

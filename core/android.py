@@ -9,11 +9,12 @@
 """
 
 from datetime import datetime
+
 import os
 from PIL import Image
 
 
-def analyze_current_screen_text(directory="."):
+def analyze_current_screen_text(directory=".", compress_level=1):
     """
     capture the android screen now
 
@@ -23,7 +24,7 @@ def analyze_current_screen_text(directory="."):
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
     capture_screen(screenshot_filename, directory)
-    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area)
+    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 
 
@@ -39,7 +40,7 @@ def capture_screen(filename="screenshot.png", directory="."):
     os.system("adb pull /sdcard/{0} {1}".format(filename, os.path.join(directory, filename)))
 
 
-def parse_answer_area(source_file, text_area_file):
+def parse_answer_area(source_file, text_area_file, compress_level):
     """
     crop the answer area
 
@@ -47,6 +48,10 @@ def parse_answer_area(source_file, text_area_file):
     """
 
     image = Image.open(source_file)
+    if compress_level == 1:
+        image = image.convert("L")
+    elif compress_level == 2:
+        image = image.convert("1")
     wide = image.size[0]
     print("screen width: {0}, screen height: {1}".format(image.size[0], image.size[1]))
 
