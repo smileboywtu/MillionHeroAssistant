@@ -26,3 +26,11 @@ nltk==3.2.5
 numpy==1.14.0
 sumy==0.7.0
 baidu-aip==2.0.0.1
+backports.functools-lru-cache==1.4
+cycler==0.10.0
+matplotlib==2.1.1
+olefile==0.44
+opencv-python==3.4.0.12
+pyparsing==2.2.0
+python-dateutil==2.6.1
+pytz==2017.3
