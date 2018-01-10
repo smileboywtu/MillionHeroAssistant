@@ -53,8 +53,16 @@ def parse_search(keyword, default_answer_select=2, timeout=2):
         print("baidu zhidao api error")
         return ""
     parser = html.fromstring(resp.text)
+    
+    # 适配百度最佳推荐结果
+    best_li = parser.xpath(
+        "//*[@id='page-main']//div[@class='list-header']//div[@id='wgt-autoask']/dl/dd[@class='dd answer']/a/@href")
+    # 其他结果
     question_li = parser.xpath("//*[@id='page-main']//div[@class='list-inner']/*[@id='wgt-list']/dl/dt/a/@href")
-    return question_li[:default_answer_select]
+
+    tli = question_li[:default_answer_select]
+    best_li.extend(tli)
+    return best_li
 
 
 def parse_answer(urls, timeout=2):
