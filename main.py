@@ -51,6 +51,16 @@ def parse_args():
     return parser.parse_args()
 
 
+def keyword_normalize(keyword):
+    for char, repl in [("“", ""), ("”", "")]:
+        keyword = keyword.replace(char, repl)
+
+    keyword = keyword.split(r"．")[-1]
+    keywords = keyword.split(" ")
+    keyword = "".join([e.strip("\r\n") for e in keywords if e])
+    return keyword
+
+
 def main():
     args = parse_args()
     timeout = args.timeout
@@ -67,9 +77,7 @@ def main():
         print("text not recognize")
         return
 
-    keyword = keyword.split(r"．")[-1]
-    keywords = keyword.split(" ")
-    keyword = "".join([e.strip("\r\n") for e in keywords if e])
+    keyword = keyword_normalize(keyword)
     print("guess keyword: ", keyword)
     answers = zhidao_search(
         keyword=keyword,
