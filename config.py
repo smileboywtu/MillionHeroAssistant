@@ -18,4 +18,4 @@ prefer = ("baidu", "hanwang")
 
 text_summary = True
 
-summary_sentence_count = 5
+summary_sentence_count = 3
