@@ -16,7 +16,7 @@ from config import app_id
 from config import app_key
 from config import app_secret
 from config import data_directory
-from core.android import analyze_current_screen_text
+from core.android import analyze_current_screen_text, save_screen
 from core.nearby import calculate_relation
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 
@@ -88,6 +88,9 @@ def main():
     end = time.time()
     print("use {0} 秒".format(end - start))
 
+    save_screen(
+        directory=data_directory
+    )
 
 if __name__ == "__main__":
     main()
