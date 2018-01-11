@@ -103,6 +103,7 @@ K = count(Q&A) / (count(Q) * count(A))
 - wangfpp
 - [using1174](https://github.com/Using1174)
 - [kakalote2008	](https://github.com/kakalote2008)
+- [lonelam](https://github.com/lonelam)
 
 ## 参考项目
 
