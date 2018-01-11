@@ -14,6 +14,8 @@
 ## 运行
 
 ![](./wechatcode/master.png)
+![](./wechatcode/master2.png)
+![](./wechatcode/master3.png)
 
 
 ## 汉王OCR 百度OCR
@@ -100,6 +102,7 @@ K = count(Q&A) / (count(Q) * count(A))
 - [uniqhj](https://github.com/UniqHu)
 - wangfpp
 - [using1174](https://github.com/Using1174)
+- [kakalote2008	](https://github.com/kakalote2008)
 
 ## 参考项目
 
@@ -110,7 +113,10 @@ K = count(Q&A) / (count(Q) * count(A))
 ## 交流学习
 
 想要交流学习请添加我的 wechat ,
-群已经满了100人了，需要邀请进群。
+群已经满了200人了，需要邀请进群。
+请优先加入qq群，很重要的改进可以加weixin:
+
+![](./wechatcode/qqcode.png)
 
 请加wexin后邀请：
 
