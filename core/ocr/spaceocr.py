@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-import requests
 import json
+
+import requests
+
 """
 
     ocr.space
@@ -8,7 +10,7 @@ import json
 """
 
 
-def get_text_from_image(image_data,api_key='6c851da45688957', overlay=False,language='chs'):
+def get_text_from_image(image_data, api_key='6c851da45688957', overlay=False, language='chs'):
     """
     CR.space API request with local file.
     :param image_data: image's base64 encoding.
@@ -22,23 +24,16 @@ def get_text_from_image(image_data,api_key='6c851da45688957', overlay=False,lang
     :return: Result in JSON format.
     """
     payload = {
-            'isOverlayRequired': overlay,
-            'apikey': api_key,
-            'language': language,
-           }
+        'isOverlayRequired': overlay,
+        'apikey': api_key,
+        'language': language,
+    }
     r = requests.post('https://api.ocr.space/parse/image',
-                          files={'image.png': image_data},
-                          data=payload,
-                          )
+                      files={'image.png': image_data},
+                      data=payload,
+                      )
     result = json.loads(r.content)
-    if (result['OCRExitCode']==1):
+    if (result['OCRExitCode'] == 1):
         return result['ParsedResults'][0]['ParsedText']
-    print result['ErrorMessage']
+    print(result['ErrorMessage'])
     return ""
-
-"""
-# for test
-with open("test.png", "rb") as fp:
-    image_data = fp.read()
-    print get_text_from_image(image_data)  
-"""  
