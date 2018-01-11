@@ -12,6 +12,7 @@ from datetime import datetime
 
 import os
 from PIL import Image
+from shutil import copyfile
 
 
 def analyze_current_screen_text(directory=".", compress_level=1):
@@ -27,6 +28,16 @@ def analyze_current_screen_text(directory=".", compress_level=1):
     parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 
+def analyze_stored_screen_text(screenshot_filename = "screenshot.png", directory=".", compress_level=1):
+    """
+    reload screen from stored picture to store
+    :param directory:
+    :param compress_level:
+    :return:
+    """
+    save_text_area = os.path.join(directory, "text_area.png")
+    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
+    return get_area_data(save_text_area)
 
 def capture_screen(filename="screenshot.png", directory="."):
     """
@@ -38,6 +49,16 @@ def capture_screen(filename="screenshot.png", directory="."):
     """
     os.system("adb shell screencap -p /sdcard/{0}".format(filename))
     os.system("adb pull /sdcard/{0} {1}".format(filename, os.path.join(directory, filename)))
+
+def save_screen(filename="screenshot.png", directory="."):
+    """
+    Save screen for further test
+    :param filename:
+    :param directory:
+    :return:
+    """
+    copyfile(os.path.join(directory, filename),
+             os.path.join(directory, datetime.now().strftime("%m%d_%H%M%S").join(os.path.splitext(filename))))
 
 
 def parse_answer_area(source_file, text_area_file, compress_level):
