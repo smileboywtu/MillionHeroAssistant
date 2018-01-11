@@ -16,12 +16,16 @@ app_id = "10661627"
 app_key = "h5xcL0m4TB8fiiFWoysn7uxt"
 app_secret = " HGA1cgXzz80douKQUpII7K77TYWSGcfW"
 
+### ocr.space 
+api_key = "6c851da45688957"
+
 ### 0 表示普通识别，配合compress_level 1使用
 ### 1 标识精确识别，精确识别建议配合image_compress_level 2使用
 api_version = (0, 1)
 
 ### 如果你想要使用汉王的话，将汉王移动到前面，默认使用百度，每天封顶500次
-prefer = ("baidu", "hanwang")
+### 如果你想要使用ocr.space的话，将ocrspace移动到前面,每个api_key每月支持25000次调用
+prefer = ("baidu", "hanwang", "ocrspace")
 
 text_summary = True
 summary_sentence_count = 3
