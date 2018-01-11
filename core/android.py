@@ -9,11 +9,13 @@
 """
 
 from datetime import datetime
+
 import os
 from PIL import Image
 from shutil import copyfile
 
-def analyze_current_screen_text(directory="."):
+
+def analyze_current_screen_text(directory=".", compress_level=1):
     """
     capture the android screen now
 
@@ -23,7 +25,7 @@ def analyze_current_screen_text(directory="."):
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
     capture_screen(screenshot_filename, directory)
-    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area)
+    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 
 
@@ -38,6 +40,7 @@ def capture_screen(filename="screenshot.png", directory="."):
     os.system("adb shell screencap -p /sdcard/{0}".format(filename))
     os.system("adb pull /sdcard/{0} {1}".format(filename, os.path.join(directory, filename)))
 
+
 def save_screen(filename="screenshot.png", directory="."):
     """
     Save screen for further test
@@ -45,22 +48,26 @@ def save_screen(filename="screenshot.png", directory="."):
     :param directory:
     :return:
     """
-    copyfile(os.path.join(directory, filename) , os.path.join(directory, datetime.now().strftime("%m%d_%H%M").join(os.path.splitext(filename))))
+    copyfile(os.path.join(directory, filename),
+             os.path.join(directory, datetime.now().strftime("%m%d_%H%M").join(os.path.splitext(filename))))
 
-def parse_answer_area(source_file, text_area_file):
+
+def parse_answer_area(source_file, text_area_file, compress_level):
     """
     crop the answer area
-
     :return:
     """
 
     image = Image.open(source_file)
+    if compress_level == 1:
+        image = image.convert("L")
+    elif compress_level == 2:
+        image = image.convert("1")
     wide = image.size[0]
     print("screen width: {0}, screen height: {1}".format(image.size[0], image.size[1]))
-    # adjust it as need
+
     region = image.crop((70, 200, wide - 70, 1300))
     region.save(text_area_file)
-
 
 
 def get_area_data(text_area_file):

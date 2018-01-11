@@ -19,7 +19,7 @@ def search_result_number(keyword, timeout=2):
     :param timeout:
     :return:
     """
-    url = "http://www.baidu.com/s"
+    url = "http://www.google.com/search"
     params = {
         "q": keyword
     }
