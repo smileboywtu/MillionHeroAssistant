@@ -33,7 +33,7 @@ def get_text_from_image(image_data,api_key='6c851da45688957', overlay=False,lang
     result = json.loads(r.content)
     if (result['OCRExitCode']==1):
         return result['ParsedResults'][0]['ParsedText']
-    print result['ErrorMessage']
+    print (result['ErrorMessage'])
     return ""
 
 """
