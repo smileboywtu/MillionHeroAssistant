@@ -2,11 +2,13 @@
 
 
 import multiprocessing
+import platform
 
 import jieba
 import jieba.analyse
 
-jieba.enable_parallel(multiprocessing.cpu_count())
+if not platform.system().upper().startswith("WINDOWS"):
+    jieba.enable_parallel(multiprocessing.cpu_count())
 
 Noun_flags = [
     "n",
