@@ -6,9 +6,13 @@
     Xi Gua video Million Heroes
 
 """
+import ctypes
+import multiprocessing
 import time
 from argparse import ArgumentParser
+from multiprocessing import Value
 
+import keyboard
 import operator
 from functools import partial
 from terminaltables import AsciiTable
@@ -19,15 +23,15 @@ from config import app_id
 from config import app_key
 from config import app_secret
 from config import data_directory
-from config import hanwan_appcode
+from config import enable_chrome
 from config import image_compress_level
 from config import prefer
 from core.android import analyze_current_screen_text
 from core.android import save_screen
 from core.baiduzhidao import baidu_count
 from core.check_words import parse_false
+from core.chrome_search import run_browser
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
-from core.ocr.hanwanocr import get_text_from_image as han_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
 
 if prefer[0] == "baidu":
@@ -37,8 +41,6 @@ if prefer[0] == "baidu":
                                   app_secret=app_secret,
                                   api_version=api_version,
                                   timeout=5)
-elif prefer[0] == "hanwang":
-    get_text_from_image = partial(han_get_text, appcode=hanwan_appcode, timeout=3)
 
 elif prefer[0] == "ocrspace":
     get_test_from_image = partial(ocrspace_get_text, api_key=api_key)
@@ -87,6 +89,12 @@ def main():
     args = parse_args()
     timeout = args.timeout
 
+    if enable_chrome:
+        question_obj = Value(ctypes.c_char_p, "".encode("utf-8"))
+        browser_daemon = multiprocessing.Process(target=run_browser, args=(question_obj,))
+        browser_daemon.daemon = True
+        browser_daemon.start()
+
     def __inner_job():
         start = time.time()
         text_binary = analyze_current_screen_text(
@@ -105,6 +113,12 @@ def main():
         print(question)
         print('-' * 72)
         print("\n".join(answers))
+
+        # notice browser
+        if enable_chrome:
+            with question_obj.get_lock():
+                question_obj.value = question
+                keyboard.press("space")
 
         search_question = pre_process_question(question)
         summary = baidu_count(search_question, answers, timeout=timeout)

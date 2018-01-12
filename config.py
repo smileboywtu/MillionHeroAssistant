@@ -10,8 +10,6 @@ image_compress_level = (1, 0, 2)
 ### 1 标识精确识别，精确识别建议配合image_compress_level 2使用
 api_version = (0, 1)
 
-### ocr config
-hanwan_appcode = "714501eede0b4ac9a75a11af64b3b4d7"
 
 ### baidu orc
 app_id = "10661627"
@@ -21,6 +19,9 @@ app_secret = "HGA1cgXzz80douKQUpII7K77TYWSGcfW"
 ### ocr.space 
 api_key = "6c851da45688957"
 
-### 如果你想要使用汉王的话，将汉王移动到前面，默认使用百度，每天封顶500次
+### 默认使用百度，每天封顶500次
 ### 如果你想要使用ocr.space的话，将ocrspace移动到前面,每个api_key每月支持25000次调用
-prefer = ("baidu", "hanwang", "ocrspace")
+prefer = ("baidu",  "ocrspace")
+
+### enable chrome
+enable_chrome = True
