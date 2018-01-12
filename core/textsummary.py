@@ -9,6 +9,10 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
+import multiprocessing
+import platform
+
+import jieba
 from sumy.nlp.stemmers import Stemmer
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.parsers.plaintext import PlaintextParser
@@ -17,6 +21,9 @@ from sumy.utils import get_stop_words
 
 LANGUAGE = "chinese"
 SENTENCES_COUNT = 5
+
+if not platform.system().upper().startswith("WINDOWS"):
+    jieba.enable_parallel(multiprocessing.cpu_count())
 
 
 def chinese_normalnize(long_text):

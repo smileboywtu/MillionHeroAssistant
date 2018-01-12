@@ -12,11 +12,11 @@ from argparse import ArgumentParser
 
 from functools import partial
 
+from config import api_key
 from config import api_version
 from config import app_id
 from config import app_key
 from config import app_secret
-from config import api_key
 from config import data_directory
 from config import default_answer_number
 from config import hanwan_appcode
@@ -42,7 +42,8 @@ elif prefer[0] == "hanwang":
     get_text_from_image = partial(han_get_text, appcode=hanwan_appcode, timeout=3)
 
 elif prefer[0] == "ocrspace":
-    get_test_from_image = partial(ocrspace_get_text,api_key=api_key)
+    get_test_from_image = partial(ocrspace_get_text, api_key=api_key)
+
 
 def parse_args():
     parser = ArgumentParser(description="Million Hero Assistant")
@@ -69,45 +70,64 @@ def main():
     args = parse_args()
     timeout = args.timeout
 
-    start = time.time()
-    text_binary = analyze_current_screen_text(
-        directory=data_directory,
-        compress_level=image_compress_level[0]
-    )
-    keyword = get_text_from_image(
-        image_data=text_binary,
-    )
-    if not keyword:
-        print("text not recognize")
-        return
+    def __inner_job():
+        start = time.time()
+        text_binary = analyze_current_screen_text(
+            directory=data_directory,
+            compress_level=image_compress_level[0]
+        )
+        keyword = get_text_from_image(
+            image_data=text_binary,
+        )
+        if not keyword:
+            print("text not recognize")
+            return
 
-    keyword = keyword_normalize(keyword)
-    print("guess keyword: ", keyword)
-    answers = zhidao_search(
-        keyword=keyword,
-        default_answer_select=default_answer_number,
-        timeout=timeout
-    )
-    answers = filter(None, answers)
+        keyword = keyword_normalize(keyword)
+        print("guess keyword: ", keyword)
+        answers = zhidao_search(
+            keyword=keyword,
+            default_answer_select=default_answer_number,
+            timeout=timeout
+        )
+        answers = filter(None, answers)
 
-    for text in answers:
-        print('=' * 70)
-        text = text.replace("\u3000", "")
-        if len(text) > 120 and text_summary:
-            sentences = get_summary(text, summary_sentence_count)
-            sentences = filter(None, sentences)
-            if not sentences:
-                print(text)
+        for text in answers:
+            print('=' * 70)
+            text = text.replace("\u3000", "")
+            if len(text) > 120 and text_summary:
+                sentences = get_summary(text, summary_sentence_count)
+                sentences = filter(None, sentences)
+                if not sentences:
+                    print(text)
+                else:
+                    print("\n".join(sentences))
             else:
-                print("\n".join(sentences))
-        else:
-            print("\n".join(textwrap.wrap(text, width=45)))
+                print("\n".join(textwrap.wrap(text, width=45)))
 
-    end = time.time()
-    print("use {0} 秒".format(end - start))
-    save_screen(
-        directory=data_directory
-    )
+        end = time.time()
+        print("use {0} 秒".format(end - start))
+        save_screen(
+            directory=data_directory
+        )
+
+    while True:
+
+        print("""
+请在答题开始前就运行程序，
+答题开始的时候按Enter预测答案
+            """)
+
+        enter = input("按Enter键开始，按ESC键退出...")
+        if enter == chr(27):
+            break
+        try:
+            __inner_job()
+        except Exception as e:
+            print(str(e))
+
+        print("欢迎下次使用")
+
 
 if __name__ == "__main__":
     main()
