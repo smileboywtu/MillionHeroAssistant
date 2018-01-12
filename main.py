@@ -96,7 +96,7 @@ def main():
         summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
         data = [("选项", "同比")]
         for a, w in summary_li:
-            data.append((a, "{:.3f}".format(normalize(w))))
+            data.append((a, "{:.3f}".format(normalize(w) if max_member > min_member else w)))
         table = SingleTable(data)
         print(table.table)
 
