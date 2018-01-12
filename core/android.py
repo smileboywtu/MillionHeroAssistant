@@ -28,7 +28,8 @@ def analyze_current_screen_text(directory=".", compress_level=1):
     parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 
-def analyze_stored_screen_text(screenshot_filename = "screenshot.png", directory=".", compress_level=1):
+
+def analyze_stored_screen_text(screenshot_filename="screenshot.png", directory=".", compress_level=1):
     """
     reload screen from stored picture to store
     :param directory:
@@ -38,6 +39,7 @@ def analyze_stored_screen_text(screenshot_filename = "screenshot.png", directory
     save_text_area = os.path.join(directory, "text_area.png")
     parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
+
 
 def capture_screen(filename="screenshot.png", directory="."):
     """
@@ -49,6 +51,7 @@ def capture_screen(filename="screenshot.png", directory="."):
     """
     os.system("adb shell screencap -p /sdcard/{0}".format(filename))
     os.system("adb pull /sdcard/{0} {1}".format(filename, os.path.join(directory, filename)))
+
 
 def save_screen(filename="screenshot.png", directory="."):
     """
@@ -76,7 +79,7 @@ def parse_answer_area(source_file, text_area_file, compress_level):
     wide = image.size[0]
     print("screen width: {0}, screen height: {1}".format(image.size[0], image.size[1]))
 
-    region = image.crop((70, 200, wide - 70, 700))
+    region = image.crop((70, 200, wide - 70, 1300))
     region.save(text_area_file)
 
 
