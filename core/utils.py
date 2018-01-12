@@ -23,4 +23,6 @@ def number_normalize(number, max_member, min_member, c=100):
     :param min_member:
     :return:
     """
+    if max_member == min_member:
+        return number
     return (number - min_member) * c / (max_member - min_member)

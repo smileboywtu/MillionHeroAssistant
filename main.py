@@ -47,8 +47,6 @@ def parse_question_and_answer(text_list):
             break
 
     question = question.split(".")[-1]
-    for dig in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12):
-        question = question.lstrip(str(dig))
     return question, text_list[start:]
 
 
