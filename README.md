@@ -7,7 +7,7 @@
 
 移动端支持 Android / IOS 手机，程序运行时间是3秒左右（答题是10秒）。
 
-## 只有 IPHONE, 没有 android 手机怎么办？
+# 只有 IPHONE, 没有 android 手机怎么办？
 
 其中一种方法是你可以使用 `ios` 分支，更加简单和靠谱的办法是使用模拟器。
 
@@ -17,7 +17,7 @@
 4. 在模拟器中安装答题应用
 5. 运行答题辅助脚本`python main.py`,如果有问题下文有解决办法，请参照安装步骤
 
-**支持捐赠**
+## **支持捐赠**
 
 - [微信入口](./wechatcode/wechatpay.png)
 - [支付宝](./wechatcode/alipay.png)
