@@ -24,4 +24,4 @@ api_key = "6c851da45688957"
 prefer = ("baidu",  "ocrspace")
 
 ### enable chrome
-enable_chrome = False
+enable_chrome = True

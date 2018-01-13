@@ -6,13 +6,16 @@
     Xi Gua video Million Heroes
 
 """
-import ctypes
+
+
 import multiprocessing
+from multiprocessing import Event
+from multiprocessing import Pipe
+
 import time
 from argparse import ArgumentParser
 from multiprocessing import Value
 
-import keyboard
 import operator
 from functools import partial
 from terminaltables import AsciiTable
@@ -65,9 +68,9 @@ def parse_question_and_answer(text_list):
         if "?" in keyword:
             start = i + 1
             break
-    question = question.split(".")[-1]
-    question, true_flag = parse_false(question)
-    return true_flag, question, text_list[start:]
+    real_question = question.split(".")[-1]
+    question, true_flag = parse_false(real_question)
+    return true_flag, real_question, question, text_list[start:]
 
 
 def pre_process_question(keyword):
@@ -90,8 +93,13 @@ def main():
     timeout = args.timeout
 
     if enable_chrome:
-        question_obj = Value(ctypes.c_char_p, "".encode("utf-8"))
-        browser_daemon = multiprocessing.Process(target=run_browser, args=(question_obj,))
+        closer = Event()
+        noticer = Event()
+        closer.clear()
+        noticer.clear()
+        reader, writer = Pipe()
+        browser_daemon = multiprocessing.Process(
+            target=run_browser, args=(closer, noticer, reader,))
         browser_daemon.daemon = True
         browser_daemon.start()
 
@@ -108,21 +116,21 @@ def main():
             print("text not recognize")
             return
 
-        true_flag, question, answers = parse_question_and_answer(keywords)
+        true_flag, real_question, question, answers = parse_question_and_answer(keywords)
         print('-' * 72)
-        print(question)
+        print(real_question)
         print('-' * 72)
         print("\n".join(answers))
 
         # notice browser
         if enable_chrome:
-            with question_obj.get_lock():
-                question_obj.value = question
-                keyboard.press("space")
+            writer.send(question)
+            noticer.set()
 
         search_question = pre_process_question(question)
         summary = baidu_count(search_question, answers, timeout=timeout)
-        summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
+        summary_li = sorted(
+            summary.items(), key=operator.itemgetter(1), reverse=True)
         data = [("选项", "同比")]
         for a, w in summary_li:
             data.append((a, w))
@@ -159,6 +167,12 @@ def main():
             print(str(e))
 
         print("欢迎下次使用")
+
+    if enable_chrome:
+        reader.close()
+        writer.close()
+        closer.set()
+        time.sleep(3)
 
 
 if __name__ == "__main__":
