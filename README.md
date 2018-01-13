@@ -137,6 +137,7 @@ K = count(Q&A) / (count(Q) * count(A))
 - [using1174](https://github.com/Using1174)
 - [kakalote2008	](https://github.com/kakalote2008)
 - [lonelam](https://github.com/lonelam)
+- [luyiming](https://github.com/luyiming)
 
 ## 参考项目
 
