@@ -138,6 +138,7 @@ K = count(Q&A) / (count(Q) * count(A))
 - [kakalote2008	](https://github.com/kakalote2008)
 - [lonelam](https://github.com/lonelam)
 - [luyiming](https://github.com/luyiming)
+- [SJX516](https://github.com/SJX516)
 
 ## 参考项目
 
