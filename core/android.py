@@ -13,8 +13,10 @@ from datetime import datetime
 import os
 from PIL import Image
 from shutil import copyfile
+import matplotlib.pyplot as plt
 
-def analyze_current_screen_text(crop_area, directory=".", compress_level=1):
+
+def analyze_current_screen_text(directory=".", compress_level=1):
     """
     capture the android screen now
 
@@ -24,7 +26,11 @@ def analyze_current_screen_text(crop_area, directory=".", compress_level=1):
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
     capture_screen(screenshot_filename, directory)
-    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level, crop_area)
+
+    #pri_image = Image.open(os.path.join(directory, screenshot_filename))
+    #pri_image.resize((int(1920/5),int(1080/5))).save(os.path.join(directory, screenshot_filename))
+
+    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 
 
@@ -63,7 +69,7 @@ def save_screen(filename="screenshot.png", directory="."):
              os.path.join(directory, datetime.now().strftime("%m%d_%H%M%S").join(os.path.splitext(filename))))
 
 
-def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
+def parse_answer_area(source_file, text_area_file, compress_level):
     """
     crop the answer area
 
@@ -71,16 +77,15 @@ def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
     """
 
     image = Image.open(source_file)
+
     if compress_level == 1:
         image = image.convert("L")
     elif compress_level == 2:
         image = image.convert("1")
+    wide = image.size[0]
+    print("screen width: {0}, screen height: {1}".format(image.size[0], image.size[1]))
 
-    width, height = image.size[0], image.size[1]
-    print("screen width: {0}, screen height: {1}".format(width, height))
-
-    region = image.crop((width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
-
+    region = image.crop((70, 200, wide - 70, 1300))
     region.save(text_area_file)
 
 

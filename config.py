@@ -10,17 +10,11 @@ image_compress_level = (1, 0, 2)
 ### 1 标识精确识别，精确识别建议配合image_compress_level 2使用
 api_version = (0, 1)
 
-## 图像比例裁剪区域, (left, top, right, bottom)
-## 最终裁剪区域可表示为 (image_width * left, image_height * top, image_width * right, image_height * bottom)
-crop_areas = {
-    '百万英雄': (55/1080, 300/1920, 1025/1080, 1260/1920),
-    '冲顶大会': (40/750, 170/1334, 710/750, 865/1334)
-}
 
 ### baidu orc
-app_id = "10661627"
-app_key = "h5xcL0m4TB8fiiFWoysn7uxt"
-app_secret = "HGA1cgXzz80douKQUpII7K77TYWSGcfW"
+app_id = "10683493"
+app_key = "euFkc5r7fNhYhQGFv3A9t9C6"
+app_secret = "jeYTykrp0qlWpk4GsaRfeLASyMDrPjGH"
 
 ### ocr.space
 api_key = "6c851da45688957"
@@ -30,4 +24,4 @@ api_key = "6c851da45688957"
 prefer = ("baidu",  "ocrspace")
 
 ### enable chrome
-enable_chrome = True
+enable_chrome = False

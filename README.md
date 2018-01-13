@@ -1,32 +1,15 @@
 
-## 百万英雄答题助手
+## 西瓜视频百万英雄助手
 
-参考了微信跳一跳助手的思路，通过截取手机上面的题目，利用[百度文字识别](https://cloud.baidu.com/product/ocr/general)识别问题和答案。
+参考了微信跳一跳助手的思路，通过截取手机上面的题目识别问题和答案。
+支持使用[汉王云 OCR ](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.730005.0.0.B1mZNd#sku=yuncode552300000)和[百度文字识别](https://cloud.baidu.com/product/ocr/general)。
 
-## 运行
 
-### 开启浏览器同步支持：
-![](./wechatcode/main.png)
+移动端支持 Android / IOS 手机，程序运行时间是3秒左右（答题是10秒）。
 
-### 简洁版本：
-![](./wechatcode/run-5.png)
-![](./wechatcode/run-1.png)
-![](./wechatcode/run-2.png)
+# 只有 IPHONE, 没有 android 手机怎么办？
 
-# 我什么都不会勒，但是想带女友打怪升级
-
-真有一个办法，提供了小白版本：
-
-- 无需下载配置复杂的工具链路
-- 专人协助
-
-小白版本是基于目前的主干分支开发的，继承了主干分支的功能，主要是使用上面配置的东西变少了，专门提供给不太懂技术的小白，大神请使用开源代码折腾。
-
-**小白版本** 目前是需要收取一定的费用，价格是9.9，请走捐赠入口捐赠后联系，或者加微信也可以，微信在最下面。
-
-# 只有 iphone, 没有 android 手机怎么办？
-
-简单靠谱的办法是使用模拟器。
+其中一种方法是你可以使用 `ios` 分支，更加简单和靠谱的办法是使用模拟器。
 
 1. 首先还是要下载adb工具，下文有介绍
 2. 下载[夜神](https://www.yeshen.com/)模拟器并安装
@@ -42,49 +25,35 @@
 捐赠后请给我留言，如下福利：
 
 - 项目结束后，整体讲解
-- 免安装版提供支持，已完成，无需任何下载
-- 无条件辅助安装包
+- 免安装版提供支持，目前开发中
+- 无责任辅助安装包
 
-
-## 百度OCR
-
-**notice**: 百度的注册开发者后，创建应用就可以看见自己的 key 和 secret 。
-
-
-## 部署
-
-1. 从python官网安装python3.6环境
-2. pip install -r requirements.txt
-3. 创建默认的临时文件夹mkdir -p screenshots
-4. 修改默认的配置文件`config.py`,配置文件夹中可以配置临时数据目录和appcode
-
-
-## ADB工具配置
-
-以 linux 为例：
-
-1. 下载 android-platform-tools，访问[google](https://developer.android.google.cn/studio/releases/platform-tools.html)下载，默认 mac，windows， linux 均支持
-2. 配置环境变量，进入 platform 目录下面`export PATH=$(pwd):PATH`配置 adb 工具到系统的 path 下面
-3. 手机打开开发者模式
-4. 使用usb连接手机后信任，`adb devices`来检查是否有自己的设备，确认已经连接
-5. 接下来就进入百万英雄，等待有题目的时候就运行`python main.py`即可
 
 
 ## Release
 
->- 2018/1/13: 增加浏览器支持，修复部分bug
 >- 2018/1/12: 更改搜索策略，自动决策，减少python依赖
 >- 2018/1/11: 结巴分词预编译和多核分词优化
 >- 2018/1/10： 增加ios分支，修复master文本摘要bug
 >- 2018/1/9： 修复答案获取bug，增加长文本信息摘要算法，增加百度OCR
 >- 2018/1/9： 使用相似度猜测答案，请切换分支使用
 
+## 运行
+
+![](./wechatcode/run-1.png)
+![](./wechatcode/run-2.png)
+![](./wechatcode/run-3.png)
+![](./wechatcode/run-4.png)
+
+## 汉王OCR 百度OCR
+
+**notice**: 第一次使用汉王阿里云只需要0.01元／100条，所以如果没有了，可以自己注册阿里云账号购买（[汉王](https://market.aliyun.com/products/57124001/cmapi011523.html?spm=5176.10695662.1996646101.searchclickresult.2d006e393rEVI7#sku=yuncode552300000)）。百度的注册开发者后创建应用就可以看见自己的 key 和 secret 。
 
 ## 分支说明
 
 - master: 主要是 Android 手机使用，支持汉王 / 百度识别 / ocrspace
 - knearby: 根据文本关联度思想，答案更加清晰，目前只支持百度识别
-
+- iso: 主要是苹果手机使用，支持百度和汉王 
 
 ## V2 文本关联相似度分析
 
@@ -130,6 +99,25 @@ K = count(Q&A) / (count(Q) * count(A))
 隋朝 | 0.0396
 
 
+## 部署
+
+1. 从python官网安装python3.6环境
+2. pip install -r requirements.txt
+3. 创建默认的临时文件夹mkdir -p screenshots
+4. 修改默认的配置文件`config.py`,配置文件夹中可以配置临时数据目录和appcode
+
+
+## ADB工具配置
+
+以 linux 为例：
+
+1. 下载 android-platform-tools，访问[google](https://developer.android.google.cn/studio/releases/platform-tools.html)下载，默认 mac，windows， linux 均支持
+2. 配置环境变量，进入 platform 目录下面`export PATH=$(pwd):PATH`配置 adb 工具到系统的 path 下面
+3. 手机打开开发者模式
+4. 使用usb连接手机后信任，`adb devices`来检查是否有自己的设备，确认已经连接
+5. 接下来就进入百万英雄，等待有题目的时候就运行`python main.py`即可
+
+
 ## 贡献者（不分先后）
 
 - [uniqhj](https://github.com/UniqHu)
@@ -137,7 +125,6 @@ K = count(Q&A) / (count(Q) * count(A))
 - [using1174](https://github.com/Using1174)
 - [kakalote2008	](https://github.com/kakalote2008)
 - [lonelam](https://github.com/lonelam)
-- [luyiming](https://github.com/luyiming)
 
 ## 参考项目
 
