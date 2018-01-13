@@ -233,8 +233,7 @@ def main():
                     ans = search_summary.kwquery(input_message,answers)
 
                 if len(ans) == 0:
-                    ans = mybot.respond('找不到答案')
-                    print('Eric：' + ans)
+                    print('Eric：' +'找不到答案')
                 elif len(ans) > 1:
                     print("不确定候选答案")
                     print('Eric: ')

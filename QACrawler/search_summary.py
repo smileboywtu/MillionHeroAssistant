@@ -290,7 +290,7 @@ def kwquery(query,answers):
         # 候选队列
         for i, st in enumerate(sorted_lists):
             # print st[0]
-            if st[0] in keywords:
+            if st[0] in keywords and st[0] not in answers:
                 continue
             else:
                 sorted_lists2.append(st)
