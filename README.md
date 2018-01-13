@@ -125,12 +125,13 @@ K = count(Q&A) / (count(Q) * count(A))
 - [using1174](https://github.com/Using1174)
 - [kakalote2008	](https://github.com/kakalote2008)
 - [lonelam](https://github.com/lonelam)
+- [sjm1992st](https://github.com/sjm1992st)
 
 ## 参考项目
 
 - [wuditken/MillionHeroes](https://github.com/wuditken/MillionHeroes)
 - [lingfengsan/MillionHero](https://github.com/lingfengsan/MillionHero)
-
+- [SnakeHacker/QA-Snake](https://github.com/SnakeHacker/QA-Snake)
 
 ## 交流学习
 
