@@ -28,7 +28,7 @@ def analyze_current_screen_text(crop_area, directory=".", compress_level=1):
     return get_area_data(save_text_area)
 
 
-def analyze_stored_screen_text(screenshot_filename="screenshot.png", directory=".", compress_level=1):
+def analyze_stored_screen_text(crop_area, screenshot_filename="screenshot.png", directory=".", compress_level=1):
     """
     reload screen from stored picture to store
     :param directory:
@@ -36,7 +36,7 @@ def analyze_stored_screen_text(screenshot_filename="screenshot.png", directory="
     :return:
     """
     save_text_area = os.path.join(directory, "text_area.png")
-    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
+    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level, crop_area)
     return get_area_data(save_text_area)
 
 
