@@ -90,7 +90,7 @@
 
 对于答题这样的项目，首先一个问题，然后有三个答案可以选择，能不能通过分别统计问题与三个答案的关联度来选择出正确的答案，由于数据采集是来自百度的，可能会受到部分广告数据的影响，但是在集合相当大的情况下，关联度还是会呈现正相关。
 
-假设题目是： 
+假设题目是：
 
 *中国历史上著名的科举制度开始于那个朝代？*
 - 汉朝
@@ -137,6 +137,7 @@ K = count(Q&A) / (count(Q) * count(A))
 - [using1174](https://github.com/Using1174)
 - [kakalote2008	](https://github.com/kakalote2008)
 - [lonelam](https://github.com/lonelam)
+- [luyiming](https://github.com/luyiming)
 
 ## 参考项目
 
