@@ -3,6 +3,9 @@
 
 data_directory = "screenshots"
 
+### 默认百万，冲顶请调整为"cd"
+screen_corp_mode = "bw"
+
 ### 1代表灰度处理， 2代表二值化处理，如果需要使用二值化，需要将2放到前面, 0不使用
 image_compress_level = (1, 0, 2)
 

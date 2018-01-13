@@ -14,6 +14,7 @@ import os
 from PIL import Image
 from shutil import copyfile
 
+from config import screen_corp_mode
 
 def analyze_current_screen_text(directory=".", compress_level=1):
     """
@@ -79,7 +80,13 @@ def parse_answer_area(source_file, text_area_file, compress_level):
     wide = image.size[0]
     print("screen width: {0}, screen height: {1}".format(image.size[0], image.size[1]))
 
-    region = image.crop((70, 200, wide - 70, 1300))
+    if screen_corp_mode == "cd":
+        ## 冲顶
+        region = image.crop((120, 290, wide - 120, 1040))     
+    else:
+        ## 百万
+        region = image.crop((70, 210, wide - 70, 1300))
+        
     region.save(text_area_file)
 
 
