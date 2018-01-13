@@ -185,11 +185,11 @@ def main():
         elif input_message.strip() == '':
             print(mybot.respond("无"))
 
-        print(input_message)
+        #print(input_message)
         message = T.wordSegment(input_message)
         # 去标点
-        print('word Seg:' + message)
-        print('词性：')
+        #print('word Seg:' + message)
+        #print('词性：')
         words = T.postag(input_message)
 
         if message == 'q':
@@ -197,9 +197,9 @@ def main():
         else:
             response = mybot.respond(message)
 
-            print("=======")
-            print(response)
-            print("=======")
+            #print("=======")
+            #print(response)
+            #print("=======")
 
             if response == "":
                 ans = mybot.respond('找不到答案')
@@ -208,14 +208,14 @@ def main():
             elif response[0] == '#':
                 # 匹配百科
                 if response.__contains__("searchbaike"):
-                    print("searchbaike")
-                    print(response)
+                    #print("searchbaike")
+                    #print(response)
                     res = response.split(':')
                     # 实体
                     entity = str(res[1]).replace(" ", "")
                     # 属性
                     attr = str(res[2]).replace(" ", "")
-                    print(entity + '<---->' + attr)
+                    #print(entity + '<---->' + attr)
 
                     ans = baike.query(entity, attr)
                     # 如果命中答案
@@ -229,8 +229,8 @@ def main():
 
                 # 匹配不到模版，通用查询
                 elif response.__contains__("NoMatchingTemplate"):
-                    print("NoMatchingTemplate")
-                    ans = search_summary.kwquery(input_message)
+                    #print("NoMatchingTemplate")
+                    ans = search_summary.kwquery(input_message,answers)
 
                 if len(ans) == 0:
                     ans = mybot.respond('找不到答案')

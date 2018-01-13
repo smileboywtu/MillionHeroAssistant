@@ -12,7 +12,7 @@ import operator
 '''
 
 
-def kwquery(query):
+def kwquery(query,answers):
     # 分词 去停用词 抽取关键词
     keywords = []
     words = T.postag(query)
@@ -269,19 +269,17 @@ def kwquery(query):
 
         # 根据问题制定规则
 
-        # 识别人名
+
         target_list = {}
-        for ks in key_sentences:
-            # print ks
-            words = T.postag(ks)
-            for w in words:
-                # print "====="
-                # print w.word
-                if w.flag == ("nr"):
-                    if w.word in target_list:
-                        target_list[w.word] += 1
+        for Hans in answers:
+            for sentence in key_sentences:
+                if Hans in sentence:
+                    if Hans in target_list:
+                        target_list[Hans] += 1
                     else:
-                        target_list[w.word] = 1
+                        target_list[Hans] = 1
+        print(target_list)
+
 
         # 找出最大词频
         ##print(target_list.items())
