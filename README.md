@@ -172,6 +172,7 @@ K = count(Q&A) / (count(Q) * count(A))
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [luyiming](https://github.com/luyiming)
 - [sjm1992st](https://github.com/sjm1992st)
 =======
@@ -179,6 +180,8 @@ K = count(Q&A) / (count(Q) * count(A))
 =======
 - [luyiming](https://github.com/luyiming)
 >>>>>>> parent of 74c2f45... Integrated QA question and answer
+=======
+>>>>>>> parent of d0901cf... Merge pull request #32 from luyiming/master
 =======
 >>>>>>> parent of d0901cf... Merge pull request #32 from luyiming/master
 
