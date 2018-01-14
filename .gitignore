@@ -4,6 +4,11 @@ __pycache__
 core/__pycache__
 screenshots
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .vscode
 >>>>>>> parent of d0901cf... Merge pull request #32 from luyiming/master
+=======
+.vscode
+.DS_Store
+>>>>>>> parent of 74c2f45... Integrated QA question and answer

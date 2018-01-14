@@ -16,6 +16,7 @@
 # 我什么都不会勒，但是想带女友打怪升级
 
 真有一个办法，提供了小白版本：
+<<<<<<< HEAD
 
 - 无需下载配置复杂的工具链路
 - 专人协助
@@ -24,6 +25,16 @@
 
 **小白版本** 目前是需要收取一定的费用，价格是9.9，请走捐赠入口捐赠后联系，或者加微信也可以，微信在最下面。
 
+=======
+
+- 无需下载配置复杂的工具链路
+- 专人协助
+
+小白版本是基于目前的主干分支开发的，继承了主干分支的功能，主要是使用上面配置的东西变少了，专门提供给不太懂技术的小白，大神请使用开源代码折腾。
+
+**小白版本** 目前是需要收取一定的费用，价格是9.9，请走捐赠入口捐赠后联系，或者加微信也可以，微信在最下面。
+
+>>>>>>> parent of 74c2f45... Integrated QA question and answer
 # 只有 iphone, 没有 android 手机怎么办？
 
 简单靠谱的办法是使用模拟器。
@@ -49,7 +60,28 @@
 ## 百度OCR
 
 **notice**: 百度的注册开发者后，创建应用就可以看见自己的 key 和 secret 。
+<<<<<<< HEAD
+=======
 
+
+## 部署
+
+1. 从python官网安装python3.6环境
+2. pip install -r requirements.txt
+3. 创建默认的临时文件夹mkdir -p screenshots
+4. 修改默认的配置文件`config.py`,配置文件夹中可以配置临时数据目录和appcode
+
+>>>>>>> parent of 74c2f45... Integrated QA question and answer
+
+## ADB工具配置
+
+以 linux 为例：
+
+1. 下载 android-platform-tools，访问[google](https://developer.android.google.cn/studio/releases/platform-tools.html)下载，默认 mac，windows， linux 均支持
+2. 配置环境变量，进入 platform 目录下面`export PATH=$(pwd):PATH`配置 adb 工具到系统的 path 下面
+3. 手机打开开发者模式
+4. 使用usb连接手机后信任，`adb devices`来检查是否有自己的设备，确认已经连接
+5. 接下来就进入百万英雄，等待有题目的时候就运行`python main.py`即可
 
 ## 部署
 
@@ -138,10 +170,14 @@ K = count(Q&A) / (count(Q) * count(A))
 - [kakalote2008	](https://github.com/kakalote2008)
 - [lonelam](https://github.com/lonelam)
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [luyiming](https://github.com/luyiming)
 - [sjm1992st](https://github.com/sjm1992st)
 =======
 >>>>>>> parent of d0901cf... Merge pull request #32 from luyiming/master
+=======
+- [luyiming](https://github.com/luyiming)
+>>>>>>> parent of 74c2f45... Integrated QA question and answer
 
 ## 参考项目
 
