@@ -29,7 +29,6 @@ from config import data_directory
 from config import enable_chrome
 from config import image_compress_level
 from config import prefer
-from config import crop_areas
 from core.android import analyze_current_screen_text
 from core.android import save_screen
 from core.baiduzhidao import baidu_count
@@ -108,8 +107,7 @@ def main():
         start = time.time()
         text_binary = analyze_current_screen_text(
             directory=data_directory,
-            compress_level=image_compress_level[0],
-            crop_area = crop_areas[game_type]
+            compress_level=image_compress_level[0]
         )
         keywords = get_text_from_image(
             image_data=text_binary,
@@ -233,26 +231,11 @@ def main():
             directory=data_directory
         )
 
-    print("""
-    请选择答题节目: 
-      1. 百万英雄
-      2. 冲顶大会
-    """)
-    game_type = input("输入节目序号: ")
-    if game_type == "1":
-        game_type = '百万英雄'
-    elif game_type == "2":
-        game_type = '冲顶大会'
-    else:
-        game_type = '百万英雄'
-
     while True:
         print("""
     请在答题开始前就运行程序，
     答题开始的时候按Enter预测答案
                 """)
-        
-        print("当前选择答题游戏: {}\n".format(game_type))
 
         enter = input("按Enter键开始，按ESC键退出...")
         if enter == chr(27):

@@ -43,9 +43,6 @@ def baidu_count(keyword, answers, timeout=2):
         ans: resp.text.count(ans)
         for ans in answers
     }
-    
-    if all([cnt == 0 for cnt in summary.values()]):
-        return summary
 
     default = list(summary.values())[0]
     if all([value == default for value in summary.values()]):
