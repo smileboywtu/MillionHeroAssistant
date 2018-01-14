@@ -137,8 +137,11 @@ K = count(Q&A) / (count(Q) * count(A))
 - [using1174](https://github.com/Using1174)
 - [kakalote2008	](https://github.com/kakalote2008)
 - [lonelam](https://github.com/lonelam)
+<<<<<<< HEAD
 - [luyiming](https://github.com/luyiming)
 - [sjm1992st](https://github.com/sjm1992st)
+=======
+>>>>>>> parent of d0901cf... Merge pull request #32 from luyiming/master
 
 ## 参考项目
 

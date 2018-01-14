@@ -26,10 +26,13 @@ def analyze_current_screen_text(directory=".", compress_level=1):
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
     capture_screen(screenshot_filename, directory)
+<<<<<<< HEAD
 
     #pri_image = Image.open(os.path.join(directory, screenshot_filename))
     #pri_image.resize((int(1920/5),int(1080/5))).save(os.path.join(directory, screenshot_filename))
 
+=======
+>>>>>>> parent of d0901cf... Merge pull request #32 from luyiming/master
     parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 

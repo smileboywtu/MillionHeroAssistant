@@ -3,3 +3,7 @@
 __pycache__
 core/__pycache__
 screenshots
+<<<<<<< HEAD
+=======
+.vscode
+>>>>>>> parent of d0901cf... Merge pull request #32 from luyiming/master
