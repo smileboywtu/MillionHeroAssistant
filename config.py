@@ -13,7 +13,7 @@ api_version = (0, 1)
 ## 图像比例裁剪区域, (left, top, right, bottom)
 ## 最终裁剪区域可表示为 (image_width * left, image_height * top, image_width * right, image_height * bottom)
 crop_areas = {
-    '百万英雄': (55/1080, 300/1920, 1025/1080, 1260/1920),
+    '百万英雄': (55/1080, 220/1920, 1025/1080, 1260/1920),
     '冲顶大会': (40/750, 170/1334, 710/750, 865/1334)
 }
 

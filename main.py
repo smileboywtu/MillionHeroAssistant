@@ -70,6 +70,11 @@ def parse_question_and_answer(text_list):
             start = i + 1
             break
     real_question = question.split(".")[-1]
+
+    for char, repl in [("以下", ""), ("下列", "")]:
+        # if real_question.startswith(char):
+            real_question = real_question.replace(char, repl, 1)
+
     question, true_flag = parse_false(real_question)
     return true_flag, real_question, question, text_list[start:]
 
@@ -155,7 +160,7 @@ def main():
         )
 
     print("""
-    请选择答题节目: 
+    请选择答题节目:
       1. 百万英雄
       2. 冲顶大会
     """)
@@ -172,7 +177,7 @@ def main():
     请在答题开始前就运行程序，
     答题开始的时候按Enter预测答案
                 """)
-        
+
         print("当前选择答题游戏: {}\n".format(game_type))
 
         enter = input("按Enter键开始，按ESC键退出...")
