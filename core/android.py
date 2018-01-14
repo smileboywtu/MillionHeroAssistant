@@ -8,13 +8,58 @@
 
 """
 
-from datetime import datetime
-
 import os
-from PIL import Image
+import platform
+import subprocess
+import sys
+from datetime import datetime
 from shutil import copyfile
 
-def analyze_current_screen_text(crop_area, directory=".", compress_level=1):
+from PIL import Image
+
+# SCREENSHOT_WAY 是截图方法，
+# 经过 check_screenshot 后，会自动递
+# 不需手动修改
+SCREENSHOT_WAY = 3
+
+
+def get_adb_tool():
+    system_version = platform.system().upper()
+    adb_bin = ""
+    parent = "adb"
+    if system_version.startswith("LINUX"):
+        adb_bin = os.path.join(parent, "linux", "adb")
+    if system_version.startswith("WINDOWS"):
+        adb_bin = os.path.join(parent, "win", "adb.exe")
+    if system_version.startswith("DARWIN"):
+        adb_bin = os.path.join(parent, "mac", "adb")
+    return adb_bin
+
+
+def check_screenshot(filename, directory):
+    """
+    检查获取截图的方式
+    """
+    save_shot_filename = os.path.join(directory, filename)
+    global SCREENSHOT_WAY
+    if os.path.isfile(save_shot_filename):
+        try:
+            os.remove(save_shot_filename)
+        except Exception:
+            pass
+    if SCREENSHOT_WAY < 0:
+        print("暂不支持当前设备")
+        sys.exit()
+    capture_screen(filename, directory)
+    try:
+        Image.open(save_shot_filename).load()
+        print("采用方式 {} 获取截图".format(SCREENSHOT_WAY))
+    except Exception:
+        SCREENSHOT_WAY -= 1
+        check_screenshot(filename=filename, directory=directory)
+
+
+def analyze_current_screen_text(crop_area, directory=".", compress_level=1, use_monitor=False):
     """
     capture the android screen now
 
@@ -23,8 +68,15 @@ def analyze_current_screen_text(crop_area, directory=".", compress_level=1):
     print("capture time: ", datetime.now().strftime("%H:%M:%S"))
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
+    adb_bin = get_adb_tool()
+    if use_monitor:
+        os.system("{0} connect 127.0.0.1:62001".format(adb_bin))
+
+    check_screenshot(filename="screenshot.png", directory=directory)
     capture_screen(screenshot_filename, directory)
-    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level, crop_area)
+    capture_screen(screenshot_filename, directory)
+    parse_answer_area(os.path.join(directory, screenshot_filename),
+                      save_text_area, compress_level, crop_area)
     return get_area_data(save_text_area)
 
 
@@ -36,20 +88,36 @@ def analyze_stored_screen_text(screenshot_filename="screenshot.png", directory="
     :return:
     """
     save_text_area = os.path.join(directory, "text_area.png")
-    parse_answer_area(os.path.join(directory, screenshot_filename), save_text_area, compress_level)
+    parse_answer_area(os.path.join(
+        directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 
 
 def capture_screen(filename="screenshot.png", directory="."):
     """
-    use adb tools
+    获取屏幕截图，目前有 0 1 2 3 四种方法，未来添加新的平台监测方法时，
+    可根据效率及适用性由高到低排序
 
     :param filename:
     :param directory:
     :return:
     """
-    os.system("adb shell screencap -p /sdcard/{0}".format(filename))
-    os.system("adb pull /sdcard/{0} {1}".format(filename, os.path.join(directory, filename)))
+    global SCREENSHOT_WAY
+    adb_bin = get_adb_tool()
+    if 1 <= SCREENSHOT_WAY <= 3:
+        process = subprocess.Popen(
+            "{0} shell screencap -p".format(adb_bin),
+            shell=True, stdout=subprocess.PIPE)
+        binary_screenshot = process.stdout.read()
+        if SCREENSHOT_WAY == 2:
+            binary_screenshot = binary_screenshot.replace(b"\r\n", b"\n")
+        elif SCREENSHOT_WAY == 1:
+            binary_screenshot = binary_screenshot.replace(b"\r\r\n", b"\n")
+        with open(os.path.join(directory, filename), "wb") as writer:
+            writer.write(binary_screenshot)
+    elif SCREENSHOT_WAY == 0:
+        os.system("{0} shell screencap -p /sdcard/{1}".format(adb_bin, filename))
+        os.system("{0} pull /sdcard/{1} {2}".format(adb_bin, filename, os.path.join(directory, filename)))
 
 
 def save_screen(filename="screenshot.png", directory="."):
@@ -79,8 +147,8 @@ def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
     width, height = image.size[0], image.size[1]
     print("screen width: {0}, screen height: {1}".format(width, height))
 
-    region = image.crop((width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
-
+    region = image.crop(
+        (width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
     region.save(text_area_file)
 
 

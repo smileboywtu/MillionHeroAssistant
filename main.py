@@ -7,17 +7,14 @@
 
 """
 
-
 import multiprocessing
+import operator
+import time
+from argparse import ArgumentParser
+from functools import partial
 from multiprocessing import Event
 from multiprocessing import Pipe
 
-import time
-from argparse import ArgumentParser
-from multiprocessing import Value
-
-import operator
-from functools import partial
 from terminaltables import AsciiTable
 
 from config import api_key
@@ -25,11 +22,12 @@ from config import api_version
 from config import app_id
 from config import app_key
 from config import app_secret
+from config import crop_areas
 from config import data_directory
 from config import enable_chrome
 from config import image_compress_level
 from config import prefer
-from config import crop_areas
+from config import use_monitor
 from core.android import analyze_current_screen_text
 from core.android import save_screen
 from core.baiduzhidao import baidu_count
@@ -73,7 +71,7 @@ def parse_question_and_answer(text_list):
 
     for char, repl in [("以下", ""), ("下列", "")]:
         # if real_question.startswith(char):
-            real_question = real_question.replace(char, repl, 1)
+        real_question = real_question.replace(char, repl, 1)
 
     question, true_flag = parse_false(real_question)
     return true_flag, real_question, question, text_list[start:]
@@ -114,7 +112,8 @@ def main():
         text_binary = analyze_current_screen_text(
             directory=data_directory,
             compress_level=image_compress_level[0],
-            crop_area = crop_areas[game_type]
+            crop_area=crop_areas[game_type],
+            use_monitor=use_monitor
         )
         keywords = get_text_from_image(
             image_data=text_binary,
@@ -123,7 +122,8 @@ def main():
             print("text not recognize")
             return
 
-        true_flag, real_question, question, answers = parse_question_and_answer(keywords)
+        true_flag, real_question, question, answers = parse_question_and_answer(
+            keywords)
         print('-' * 72)
         print(real_question)
         print('-' * 72)

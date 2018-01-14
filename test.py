@@ -4,10 +4,6 @@
 import unittest
 from unittest import TestCase
 
-from config import default_answer_number
-from core.baiduzhidao import zhidao_search
-from core.nlp import get_summary
-
 
 class OcrTestCase(TestCase):
     """unittest"""
