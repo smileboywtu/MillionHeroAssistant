@@ -42,6 +42,20 @@ class OcrTestCase(TestCase):
             message = get_text_from_image(fp.read(), app_id, app_key, app_secret, 5)
             print(message)
 
+    def test_image_count(self):
+        """
+
+        :return:
+        """
+        from PIL import Image
+        count_white = 0
+        with Image.open("screenshots/screenshot.png") as img:
+            w, h = img.size
+            for pix in img.getdata():
+                if all([i >= 240 for i in pix[:3]]):
+                    count_white += 1
+
+            print(count_white / (w * h))
 
 
 if __name__ == "__main__":
