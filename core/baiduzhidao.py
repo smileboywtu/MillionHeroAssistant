@@ -33,14 +33,6 @@ def baidu_count(keyword, answers, timeout=2):
         "wd": keyword.encode("gbk")
     }
     resp = requests.get("http://www.baidu.com/s", params=params, headers=headers, timeout=timeout)
-    ans_txt=""
-    for ans in answers:
-        keyword2=keyword+ans
-        params2 = {
-            "wd": keyword2.encode("gbk")
-        }
-        resp2 = requests.get("http://www.baidu.com/s", params=params2, headers=headers, timeout=timeout)
-        ans_txt=ans_txt+resp2.text
     if not resp.ok:
         print("baidu search error")
         return {
@@ -48,9 +40,12 @@ def baidu_count(keyword, answers, timeout=2):
             for ans in answers
         }
     summary = {
-        ans: (resp.text+ans_txt).count(ans)
+        ans: resp.text.count(ans)
         for ans in answers
     }
+    
+    if all([cnt == 0 for cnt in summary.values()]):
+        return summary
 
     default = list(summary.values())[0]
     if all([value == default for value in summary.values()]):

@@ -3,7 +3,6 @@
 import platform
 import time
 
-import keyboard
 import os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -22,7 +21,7 @@ def browser_init():
         browser_bin = os.path.join(parent, "drivers", "chromedriver-linux")
     if system_version.startswith("WINDOWS"):
         browser_bin = os.path.join(parent, "drivers", "chromedriver.exe")
-    if system_version.startswith("MAC"):
+    if system_version.startswith("DARWIN"):
         browser_bin = os.path.join(parent, "drivers", "chromedriver-mac")
 
     chrome_options = webdriver.ChromeOptions()
@@ -35,7 +34,7 @@ def browser_init():
     return browser
 
 
-def run_browser(question_object):
+def run_browser(closer, noticer, keyword_exchange):
     """
     run as a daemon
 
@@ -44,19 +43,22 @@ def run_browser(question_object):
     try:
 
         browser = browser_init()
-        print("浏览器加载成功")
+        print("\n浏览器加载成功")
     except Exception as e:
-        print("浏览器加载失败")
+        print("\n浏览器加载失败")
         print(str(e))
     else:
-        def key_press_callback(e):
-            if keyboard.is_pressed("space"):
-                browser_search(browser, question_object.value.decode("utf-8").encode("gbk"))
-
-        keyboard.hook(key_press_callback)
         while True:
-            time.sleep(2)
-            keyboard.wait()
+            if closer.is_set():
+                browser.quit()
+                browser
+
+            noticer.wait(timeout=1)
+            if noticer.is_set():
+                question = keyword_exchange.recv()
+                browser_search(browser, question)
+                noticer.clear()
+    browser.quit()
 
 
 def browser_search(browser, questions):
