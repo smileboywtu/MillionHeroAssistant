@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import platform
-import time
-
 import os
+import platform
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -16,13 +15,13 @@ def browser_init():
     """
     system_version = platform.system().upper()
     browser_bin = ""
-    parent = os.path.dirname(os.path.abspath(__file__))
+    parent = "drivers"
     if system_version.startswith("LINUX"):
-        browser_bin = os.path.join(parent, "drivers", "chromedriver-linux")
+        browser_bin = os.path.join(parent, "chromedriver-linux")
     if system_version.startswith("WINDOWS"):
-        browser_bin = os.path.join(parent, "drivers", "chromedriver.exe")
+        browser_bin = os.path.join(parent, "chromedriver.exe")
     if system_version.startswith("DARWIN"):
-        browser_bin = os.path.join(parent, "drivers", "chromedriver-mac")
+        browser_bin = os.path.join(parent, "chromedriver-mac")
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--no-sandbox")
@@ -58,7 +57,8 @@ def run_browser(closer, noticer, keyword_exchange):
                 question = keyword_exchange.recv()
                 browser_search(browser, question)
                 noticer.clear()
-    browser.quit()
+    finally:
+        browser.quit()
 
 
 def browser_search(browser, questions):

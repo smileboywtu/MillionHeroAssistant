@@ -7,17 +7,15 @@
 
 """
 
-
 import multiprocessing
+import operator
+import os
+import time
+from argparse import ArgumentParser
+from functools import partial
 from multiprocessing import Event
 from multiprocessing import Pipe
 
-import time
-from argparse import ArgumentParser
-from multiprocessing import Value
-
-import operator
-from functools import partial
 from terminaltables import AsciiTable
 
 from config import api_key
@@ -25,11 +23,13 @@ from config import api_version
 from config import app_id
 from config import app_key
 from config import app_secret
+from config import crop_areas
 from config import data_directory
 from config import enable_chrome
 from config import image_compress_level
 from config import prefer
-from core.android import analyze_current_screen_text
+from config import use_monitor
+from core.android import analyze_current_screen_text, get_adb_tool, check_screenshot
 from core.android import save_screen
 from core.baiduzhidao import baidu_count
 from core.check_words import parse_false
@@ -69,6 +69,11 @@ def parse_question_and_answer(text_list):
             start = i + 1
             break
     real_question = question.split(".")[-1]
+
+    for char, repl in [("以下", ""), ("下列", "")]:
+        # if real_question.startswith(char):
+        real_question = real_question.replace(char, repl, 1)
+
     question, true_flag = parse_false(real_question)
     return true_flag, real_question, question, text_list[start:]
 
@@ -92,6 +97,12 @@ def main():
     args = parse_args()
     timeout = args.timeout
 
+    adb_bin = get_adb_tool()
+    if use_monitor:
+        os.system("{0} connect 127.0.0.1:62001".format(adb_bin))
+
+    check_screenshot(filename="screenshot.png", directory=data_directory)
+
     if enable_chrome:
         closer = Event()
         noticer = Event()
@@ -107,7 +118,9 @@ def main():
         start = time.time()
         text_binary = analyze_current_screen_text(
             directory=data_directory,
-            compress_level=image_compress_level[0]
+            compress_level=image_compress_level[0],
+            crop_area=crop_areas[game_type],
+            use_monitor=use_monitor
         )
         keywords = get_text_from_image(
             image_data=text_binary,
@@ -116,7 +129,8 @@ def main():
             print("text not recognize")
             return
 
-        true_flag, real_question, question, answers = parse_question_and_answer(keywords)
+        true_flag, real_question, question, answers = parse_question_and_answer(
+            keywords)
         print('-' * 72)
         print(real_question)
         print('-' * 72)
@@ -146,96 +160,32 @@ def main():
             print("否定回答(**)： ", summary_li[-1][0])
         print("*" * 72)
 
-<<<<<<< HEAD
-##############################################################
-        input_message = question
-
-        if len(input_message) > 60:
-            print(mybot.respond("句子长度过长"))
-        elif input_message.strip() == '':
-            print(mybot.respond("无"))
-
-        #print(input_message)
-        message = T.wordSegment(input_message)
-        # 去标点
-        #print('word Seg:' + message)
-        #print('词性：')
-        words = T.postag(input_message)
-
-        if message == 'q':
-            exit()
-        else:
-            response = mybot.respond(message)
-
-            #print("=======")
-            #print(response)
-            #print("=======")
-
-            if response == "":
-                ans = mybot.respond('找不到答案')
-                print('Eric：' + ans)
-            # 百科搜索
-            elif response[0] == '#':
-                # 匹配百科
-                if response.__contains__("searchbaike"):
-                    #print("searchbaike")
-                    #print(response)
-                    res = response.split(':')
-                    # 实体
-                    entity = str(res[1]).replace(" ", "")
-                    # 属性
-                    attr = str(res[2]).replace(" ", "")
-                    #print(entity + '<---->' + attr)
-
-                    ans = baike.query(entity, attr)
-                    # 如果命中答案
-                    if type(ans) == list:
-                        print('Eric：' + QAT.ptranswer(ans, False))
-
-                    elif ans.decode('utf-8').__contains__(u'::找不到'):
-                        # 百度摘要+Bing摘要
-                        print("通用搜索")
-                        ans = search_summary.kwquery(input_message)
-
-                # 匹配不到模版，通用查询
-                elif response.__contains__("NoMatchingTemplate"):
-                    #print("NoMatchingTemplate")
-                    ans = search_summary.kwquery(input_message,answers)
-
-                if len(ans) == 0:
-                    print('Eric：' +'找不到答案')
-                elif len(ans) > 1:
-                    print("不确定候选答案")
-                    print('Eric: ')
-                    for a in ans:
-                        print(a)
-                else:
-                    print('Eric：' + ans[0])
-
-
-
-            # 匹配模版
-            else:
-                print('Eric：' + response)
-
-
-
-
-
-
-=======
->>>>>>> parent of 74c2f45... Integrated QA question and answer
         end = time.time()
         print("use {0} 秒".format(end - start))
         save_screen(
             directory=data_directory
         )
 
+    print("""
+    请选择答题节目:
+      1. 百万英雄
+      2. 冲顶大会
+    """)
+    game_type = input("输入节目序号: ")
+    if game_type == "1":
+        game_type = '百万英雄'
+    elif game_type == "2":
+        game_type = '冲顶大会'
+    else:
+        game_type = '百万英雄'
+
     while True:
         print("""
     请在答题开始前就运行程序，
     答题开始的时候按Enter预测答案
                 """)
+
+        print("当前选择答题游戏: {}\n".format(game_type))
 
         enter = input("按Enter键开始，按ESC键退出...")
         if enter == chr(27):
