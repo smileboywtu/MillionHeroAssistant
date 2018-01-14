@@ -68,13 +68,7 @@ def analyze_current_screen_text(crop_area, directory=".", compress_level=1, use_
     print("capture time: ", datetime.now().strftime("%H:%M:%S"))
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
-    adb_bin = get_adb_tool()
-    if use_monitor:
-        os.system("{0} connect 127.0.0.1:62001".format(adb_bin))
-
-    check_screenshot(filename="screenshot.png", directory=directory)
-    capture_screen(screenshot_filename, directory)
-    capture_screen(screenshot_filename, directory)
+    capture_screen_v2(screenshot_filename, directory)
     parse_answer_area(os.path.join(directory, screenshot_filename),
                       save_text_area, compress_level, crop_area)
     return get_area_data(save_text_area)
@@ -91,6 +85,19 @@ def analyze_stored_screen_text(screenshot_filename="screenshot.png", directory="
     parse_answer_area(os.path.join(
         directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
+
+
+def capture_screen_v2(filename="screenshot.png", directory="."):
+    """
+    can't use general fast way
+
+    :param filename:
+    :param directory:
+    :return:
+    """
+    adb_bin = get_adb_tool()
+    os.system("{0} shell screencap -p /sdcard/{1}".format(adb_bin, filename))
+    os.system("{0} pull /sdcard/{1} {2}".format(adb_bin, filename, os.path.join(directory, filename)))
 
 
 def capture_screen(filename="screenshot.png", directory="."):

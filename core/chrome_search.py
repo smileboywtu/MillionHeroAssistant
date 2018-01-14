@@ -23,7 +23,6 @@ def browser_init():
     if system_version.startswith("DARWIN"):
         browser_bin = os.path.join(parent, "chromedriver-mac")
 
-    print(browser_bin)
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-extensions")

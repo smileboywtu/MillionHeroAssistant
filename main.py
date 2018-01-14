@@ -9,6 +9,7 @@
 
 import multiprocessing
 import operator
+import os
 import time
 from argparse import ArgumentParser
 from functools import partial
@@ -28,7 +29,7 @@ from config import enable_chrome
 from config import image_compress_level
 from config import prefer
 from config import use_monitor
-from core.android import analyze_current_screen_text
+from core.android import analyze_current_screen_text, get_adb_tool, check_screenshot
 from core.android import save_screen
 from core.baiduzhidao import baidu_count
 from core.check_words import parse_false
@@ -95,6 +96,12 @@ def pre_process_question(keyword):
 def main():
     args = parse_args()
     timeout = args.timeout
+
+    adb_bin = get_adb_tool()
+    if use_monitor:
+        os.system("{0} connect 127.0.0.1:62001".format(adb_bin))
+
+    check_screenshot(filename="screenshot.png", directory=data_directory)
 
     if enable_chrome:
         closer = Event()

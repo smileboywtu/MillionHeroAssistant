@@ -27,9 +27,9 @@ crop_areas:
       - 0.684
 
 ### baidu orc
-app_id: "10661627"
-app_key: "h5xcL0m4TB8fiiFWoysn7uxt"
-app_secret: "HGA1cgXzz80douKQUpII7K77TYWSGcfW"
+app_id: "10685402"
+app_key: "lG8BLXRGgrLiAPtHybqjbACN"
+app_secret: "BgoMC5lHTqEOSid7S9kPnm2jyAEOS9NI"
 
 ### ocr.space
 api_key: "6c851da45688957"
