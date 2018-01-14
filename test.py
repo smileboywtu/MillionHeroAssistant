@@ -57,6 +57,19 @@ class OcrTestCase(TestCase):
 
             print(count_white / (w * h))
 
+    def test_crawler(self):
+        """
+        Test baidu crawler
+
+        :return:
+        """
+        from core.crawler.crawl import kwquery
+        query = "现在是晚上20点钟,再过8小时是几点钟"
+        ans = kwquery(query)
+        print("~~~~~~~")
+        for a in ans:
+            print(a)
+        print("~~~~~~~")
 
 if __name__ == "__main__":
     unittest.main()

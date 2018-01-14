@@ -31,11 +31,15 @@ from config import prefer
 from config import use_monitor
 from core.android import analyze_current_screen_text, get_adb_tool, check_screenshot
 from core.android import save_screen
-from core.baiduzhidao import baidu_count
 from core.check_words import parse_false
 from core.chrome_search import run_browser
+from core.crawler.baiduzhidao import baidu_count
+from core.crawler.crawl import crawler_daemon, jieba_initialize, kwquery
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
+
+## jieba init
+jieba_initialize()
 
 if prefer[0] == "baidu":
     get_text_from_image = partial(bai_get_text,
@@ -97,6 +101,20 @@ def main():
     args = parse_args()
     timeout = args.timeout
 
+    ## start crawler
+    # crawler_noticer = Event()
+    # crawler_noticer.clear()
+    # result_noticer = Event()
+    # result_noticer.clear()
+    # qreader, qwriter = Pipe()
+    # stdreader, stdwriter = Pipe()
+    # crawler = multiprocessing.Process(
+    #     target=crawler_daemon,
+    #     args=(crawler_noticer, qreader, result_noticer, stdwriter)
+    # )
+    # crawler.daemon = True
+    # crawler.start()
+
     adb_bin = get_adb_tool()
     if use_monitor:
         os.system("{0} connect 127.0.0.1:62001".format(adb_bin))
@@ -131,6 +149,11 @@ def main():
 
         true_flag, real_question, question, answers = parse_question_and_answer(
             keywords)
+
+        ## notice crawler to work
+        # qwriter.send(real_question.strip("?"))
+        # crawler_noticer.set()
+
         print('-' * 72)
         print(real_question)
         print('-' * 72)
@@ -159,6 +182,22 @@ def main():
             print("肯定回答(  )： ", summary_li[0][0])
             print("否定回答(**)： ", summary_li[-1][0])
         print("*" * 72)
+
+        # try crawler
+        # retry = 4
+        # while retry:
+        #     if result_noticer.is_set():
+        #         print("~" * 60)
+        #         print(stdreader.recv())
+        #         print("~" * 60)
+        #         break
+        #     retry -= 1
+        #     time.sleep(1)
+        # result_noticer.clear()
+
+        print("~" * 60)
+        print(kwquery(real_question.strip("?")))
+        print("~" * 60)
 
         end = time.time()
         print("use {0} 秒".format(end - start))
