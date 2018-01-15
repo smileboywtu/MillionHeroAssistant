@@ -31,7 +31,7 @@ def kwquery(query):
             # print(k.flag
             # print(k.word
             keywords.append(k.word)
-
+            
     answer = []
     text = ''
     # 找到答案就置1

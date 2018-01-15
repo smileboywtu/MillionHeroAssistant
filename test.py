@@ -64,7 +64,9 @@ class OcrTestCase(TestCase):
         :return:
         """
         from core.crawler.crawl import kwquery
-        query = "现在是晚上20点钟,再过8小时是几点钟"
+        from core.crawler.crawl import jieba_initialize
+        jieba_initialize()
+        query = "回锅肉属于哪一种菜系"
         ans = kwquery(query)
         print("~~~~~~~")
         for a in ans:

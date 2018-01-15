@@ -88,7 +88,7 @@ def pre_process_question(keyword):
     :param question:
     :return:
     """
-    for char, repl in [("“", ""), ("”", ""), ("？", "")]:
+    for char, repl in [("“", ""), ("”", ""), ("？", ""), ("《", ""), ("》", "")]:
         keyword = keyword.replace(char, repl)
 
     keyword = keyword.split(r"．")[-1]
