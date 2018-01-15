@@ -12,6 +12,7 @@ import operator
 import os
 import time
 from argparse import ArgumentParser
+from datetime import datetime
 from functools import partial
 from multiprocessing import Event
 from multiprocessing import Pipe
@@ -88,7 +89,10 @@ def pre_process_question(keyword):
     :param question:
     :return:
     """
-    for char, repl in [("“", ""), ("”", ""), ("？", ""), ("《", ""), ("》", "")]:
+    now = datetime.today()
+    for char, repl in [("“", ""), ("”", ""), ("？", ""), ("《", ""), ("》", ""), ("我国", "中国"),
+                       ("今天", now.strftime("%Y年%m月%d日")), ("今年", now.strftime("%Y年")),
+                       ("这个月", now.strftime("%Y年%m月"))]:
         keyword = keyword.replace(char, repl)
 
     keyword = keyword.split(r"．")[-1]
