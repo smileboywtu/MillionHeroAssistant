@@ -213,12 +213,15 @@ def main():
     请选择答题节目:
       1. 百万英雄
       2. 冲顶大会
+      3. 芝士超人
     """)
     game_type = input("输入节目序号: ")
     if game_type == "1":
         game_type = '百万英雄'
     elif game_type == "2":
         game_type = '冲顶大会'
+    elif game_type == "3":
+        game_type = "芝士超人"
     else:
         game_type = '百万英雄'
 
