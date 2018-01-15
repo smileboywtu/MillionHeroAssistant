@@ -34,7 +34,7 @@ from core.android import save_screen
 from core.check_words import parse_false
 from core.chrome_search import run_browser
 from core.crawler.baiduzhidao import baidu_count
-from core.crawler.crawl import crawler_daemon, jieba_initialize, kwquery
+from core.crawler.crawl import jieba_initialize, kwquery
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
 
@@ -244,4 +244,5 @@ def main():
 
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     main()
