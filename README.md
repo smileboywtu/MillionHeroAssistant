@@ -3,8 +3,7 @@
 
 参考了微信跳一跳助手的思路，通过截取手机上面的题目，利用[百度文字识别](https://cloud.baidu.com/product/ocr/general)识别问题和答案。
 
-## 运行
-
+## 运行 
 ### 开启浏览器同步支持：
 ![](./wechatcode/main-1.png)
 
@@ -65,7 +64,7 @@
 1. 从python官网安装python3.6环境
 2. pip install -r requirements.txt
 3. 创建默认的临时文件夹mkdir -p screenshots
-4. 修改默认的配置文件`config.py`,配置文件夹中可以配置临时数据目录和appcode
+4. 修改默认的配置文件`config.yaml`,配置文件夹中可以配置临时数据目录和appcode
 
 
 ## ADB工具配置
@@ -81,7 +80,7 @@
 
 ## Release
 
->- 2019/1/14: 新增知识库功能, 内置adb，小白版一键运行
+>- 2018/1/14: 新增知识库功能, 内置adb，小白版一键运行
 >- 2018/1/13: 增加浏览器支持，修复部分bug
 >- 2018/1/12: 更改搜索策略，自动决策，减少python依赖
 >- 2018/1/11: 结巴分词预编译和多核分词优化
