@@ -66,7 +66,8 @@ class OcrTestCase(TestCase):
         from core.crawler.crawl import kwquery
         from core.crawler.crawl import jieba_initialize
         jieba_initialize()
-        query = "回锅肉属于哪一种菜系"
+        query = "回锅肉属于什么菜系"
+        query = "北京奥运会是什么时候"
         ans = kwquery(query)
         print("~~~~~~~")
         for a in ans:
