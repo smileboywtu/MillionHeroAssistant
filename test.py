@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-
-
+import operator
 import unittest
 from unittest import TestCase
+
+from terminaltables import AsciiTable
+
+from core.crawler.baiduzhidao import baidu_count
+from main import pre_process_question
 
 
 class OcrTestCase(TestCase):
@@ -73,6 +77,22 @@ class OcrTestCase(TestCase):
         for a in ans:
             print(a)
         print("~~~~~~~")
+
+    def test_preparse_question(self):
+        """
+        Test pre parse question
+
+        :return:
+        """
+        question = "我国什么时候开始改革开放"
+        print(pre_process_question(question))
+
+        question = "今天是什么日子"
+        print(pre_process_question(question))
+
+        question = "这个月有多少天"
+        print(pre_process_question(question))
+
 
 if __name__ == "__main__":
     unittest.main()

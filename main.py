@@ -91,8 +91,9 @@ def pre_process_question(keyword):
     """
     now = datetime.today()
     for char, repl in [("“", ""), ("”", ""), ("？", ""), ("《", ""), ("》", ""), ("我国", "中国"),
-                       ("今天", now.strftime("%Y年%m月%d日")), ("今年", now.strftime("%Y年")),
-                       ("这个月", now.strftime("%Y年%m月"))]:
+                       ("今天", "{0}年{1}月{2}日".format(now.year, now.month, now.day)),
+                       ("今年", "{0}年".format(now.year)),
+                       ("这个月", "{0}年{1}月".format(now.year, now.month))]:
         keyword = keyword.replace(char, repl)
 
     keyword = keyword.split(r"．")[-1]
