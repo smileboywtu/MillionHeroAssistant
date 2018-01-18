@@ -1,12 +1,18 @@
-
 ## 百万英雄答题助手
 
 参考了微信跳一跳助手的思路，通过截取手机上面的题目，利用[百度文字识别](https://cloud.baidu.com/product/ocr/general)识别问题和答案。
 
-## 运行
-
+## 运行 
 ### 开启浏览器同步支持：
-![](./wechatcode/main.png)
+![](./wechatcode/main-1.png)
+
+### 科普性知识测试
+
+#### 回锅肉属于什么菜系
+![](./wechatcode/run-6.png)
+#### 北京奥运会是什么时候
+![](./wechatcode/run-7.png)
+
 
 ### 简洁版本：
 ![](./wechatcode/run-5.png)
@@ -19,6 +25,7 @@
 
 - 无需下载配置复杂的工具链路
 - 专人协助
+- 一键运行，云端支持开发中
 
 小白版本是基于目前的主干分支开发的，继承了主干分支的功能，主要是使用上面配置的东西变少了，专门提供给不太懂技术的小白，大神请使用开源代码折腾。
 
@@ -36,8 +43,8 @@
 
 ## **支持捐赠**
 
-- [微信入口](./wechatcode/wechatpay.png)
-- [支付宝](./wechatcode/alipay.png)
+- [微信入口](./wechatcode/liuquan_wechat.jpg)
+- [支付宝](./wechatcode/alipay.jpg)
 
 捐赠后请给我留言，如下福利：
 
@@ -56,7 +63,7 @@
 1. 从python官网安装python3.6环境
 2. pip install -r requirements.txt
 3. 创建默认的临时文件夹mkdir -p screenshots
-4. 修改默认的配置文件`config.py`,配置文件夹中可以配置临时数据目录和appcode
+4. 修改默认的配置文件`config.yaml`,配置文件夹中可以配置临时数据目录和appcode
 
 
 ## ADB工具配置
@@ -72,6 +79,8 @@
 
 ## Release
 
+>- 2018/1/15: 增加芝士大会的支持，另外增加特别关键字
+>- 2018/1/14: 新增知识库功能, 内置adb，小白版一键运行
 >- 2018/1/13: 增加浏览器支持，修复部分bug
 >- 2018/1/12: 更改搜索策略，自动决策，减少python依赖
 >- 2018/1/11: 结巴分词预编译和多核分词优化
@@ -154,8 +163,8 @@ K = count(Q&A) / (count(Q) * count(A))
 
 ![](./wechatcode/qqcode.png)
 
-请加wexin后邀请：
+请加qq后邀请：
 
-![](./wechatcode/wechat-1.png)
+![](./wechatcode/liuquan.png)
 
-qq: 294101042
+qq: 2244741445
