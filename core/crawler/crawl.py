@@ -2,6 +2,7 @@
 import multiprocessing
 import operator
 import platform
+from textwrap import wrap
 from urllib.parse import quote
 
 import jieba
@@ -27,11 +28,11 @@ def kwquery(query):
     words = T.postag(query)
     for k in words:
         # 只保留名词
-        if k.flag.__contains__("n"):
+        if k.flag.__contains__("n") or k.flag.__contains__("v"):
             # print(k.flag
             # print(k.word
             keywords.append(k.word)
-            
+
     answer = []
     text = ''
     # 找到答案就置1
@@ -46,21 +47,19 @@ def kwquery(query):
         results = soup_baidu.find(id=i)
 
         if results == None:
-            print("百度摘要找不到答案")
+            # print("百度摘要找不到答案")
             break
-        # print('============='
-        # print(results.attrs
-        # print(type(results.attrs)
-        # print(results['class']
+
         # 判断是否有mu,如果第一个是百度知识图谱的 就直接命中答案
         if 'mu' in results.attrs and i == 1:
             # print(results.attrs["mu"]
             r = results.find(class_='op_exactqa_s_answer')
             if r == None:
-                print("百度知识图谱找不到答案")
+                # print("百度知识图谱找不到答案")
+                pass
             else:
                 # print(r.get_text()
-                print("百度知识图谱找到答案")
+                # print("百度知识图谱找到答案")
                 answer.append(r.get_text().strip())
                 flag = 1
                 break
@@ -69,10 +68,11 @@ def kwquery(query):
         if "mu" in results.attrs and i == 1:
             r = results.find(class_="op_exactqa_detail_s_answer")
             if r == None:
-                print("百度诗词找不到答案")
+                # print("百度诗词找不到答案")
+                pass
             else:
                 # print(r.get_text()
-                print("百度诗词找到答案")
+                # print("百度诗词找到答案")
                 answer.append(r.get_text().strip())
                 flag = 1
                 break
@@ -82,10 +82,11 @@ def kwquery(query):
                 'http://open.baidu.com/calendar'):
             r = results.find(class_="op-calendar-content")
             if r == None:
-                print("百度万年历找不到答案")
+                # print("百度万年历找不到答案")
+                pass
             else:
                 # print(r.get_text()
-                print("百度万年历找到答案")
+                # print("百度万年历找到答案")
                 answer.append(r.get_text().strip().replace("\n", "").replace(" ", ""))
                 flag = 1
                 break
@@ -95,11 +96,12 @@ def kwquery(query):
             print(r)
 
             if r == None:
-                print("百度万年历新版找不到答案")
+                # print("百度万年历新版找不到答案")
+                pass
                 # continue
             else:
                 # print(r.get_text()
-                print("百度万年历新版找到答案")
+                # print("百度万年历新版找到答案")
                 answer.append(r)
                 flag = 1
                 break
@@ -109,11 +111,12 @@ def kwquery(query):
                 'http://open.baidu.com/static/calculator/calculator.html'):
             r = results.find('div').find_all('td')[1].find_all('div')[1]
             if r == None:
-                print("计算器找不到答案")
+                # print("计算器找不到答案")
+                pass
                 # continue
             else:
                 # print(r.get_text()
-                print("计算器找到答案")
+                # print("计算器找到答案")
                 answer.append(r.get_text().strip())
                 flag = 1
                 break
@@ -122,9 +125,10 @@ def kwquery(query):
         if "mu" in results.attrs and i == 1:
             r = results.find(class_='op_best_answer_question_link')
             if r == None:
-                print("百度知道图谱找不到答案")
+                # print("百度知道图谱找不到答案")
+                pass
             else:
-                print("百度知道图谱找到答案")
+                # print("百度知道图谱找到答案")
                 url = r['href']
                 zhidao_soup = To.get_html_zhidao(url)
                 r = zhidao_soup.find(class_='bd answer').find('pre')
@@ -140,10 +144,10 @@ def kwquery(query):
             if results.find("h3").find("a").get_text().__contains__(u"百度知道") and (i == 1 or i == 2):
                 url = results.find("h3").find("a")['href']
                 if url == None:
-                    print("百度知道图谱找不到答案")
+                    # print("百度知道图谱找不到答案")
                     continue
                 else:
-                    print("百度知道图谱找到答案")
+                    # print("百度知道图谱找到答案")
                     zhidao_soup = To.get_html_zhidao(url)
 
                     r = zhidao_soup.find(class_='bd answer')
@@ -161,10 +165,10 @@ def kwquery(query):
             if results.find("h3").find("a").get_text().__contains__(u"百度百科") and (i == 1 or i == 2):
                 url = results.find("h3").find("a")['href']
                 if url == None:
-                    print("百度百科找不到答案")
+                    # print("百度百科找不到答案")
                     continue
                 else:
-                    print("百度百科找到答案")
+                    # print("百度百科找到答案")
                     baike_soup = To.get_html_baike(url)
 
                     r = baike_soup.find(class_='lemma-summary')
@@ -189,7 +193,7 @@ def kwquery(query):
     if bingbaike != None:
         if bingbaike.find_all(class_="b_vList")[1] != None:
             if bingbaike.find_all(class_="b_vList")[1].find("li") != None:
-                print("Bing知识图谱找到答案")
+                # print("Bing知识图谱找到答案")
                 flag = 1
                 answer.append(bingbaike.get_text())
                 # print("====="
@@ -197,19 +201,19 @@ def kwquery(query):
                 # print("====="
                 return answer
     else:
-        print("Bing知识图谱找不到答案")
+        # print("Bing知识图谱找不到答案")
         results = soup_bing.find(id="b_results")
         bing_list = results.find_all('li')
         for bl in bing_list:
             temp = bl.get_text()
             if temp.__contains__(u" - 必应网典"):
-                print("查找Bing网典")
+                # print("查找Bing网典")
                 url = bl.find("h2").find("a")['href']
                 if url == None:
-                    print("Bing网典找不到答案")
+                    # print("Bing网典找不到答案")
                     continue
                 else:
-                    print("Bing网典找到答案")
+                    # print("Bing网典找到答案")
                     bingwd_soup = To.get_html_bingwd(url)
 
                     r = bingwd_soup.find(class_='bk_card_desc').find("p")
@@ -281,7 +285,7 @@ def kwquery(query):
             else:
                 sorted_lists2.append(st)
 
-        print("返回前n个词频")
+        # print("返回前n个词频")
         answer = []
         for i, st in enumerate(sorted_lists2):
             # print(st[0]
@@ -290,12 +294,12 @@ def kwquery(query):
                 # print(st[0]
                 # print(st[1]
                 answer.append(st[0])
-        # print(answer
+                # print(answer
 
     return answer
 
 
-def crawler_daemon(noticer, keyword_exchange, stdnoticer, stdwriter):
+def crawler_daemon(keyword_queue, outputqueue):
     """
     Run as a daemon to crawl the web
 
@@ -303,20 +307,19 @@ def crawler_daemon(noticer, keyword_exchange, stdnoticer, stdwriter):
     :param reader:
     :return:
     """
-
     while True:
-        noticer.wait()
-        question = keyword_exchange.recv()
+        question = keyword_queue.get()
         try:
             ans = kwquery(question)
-            stdwriter.send(ans)
-            stdnoticer.set()
+            outputqueue.put(
+                {
+                    "type": 2,
+                    "data": "{0}".format(wrap(" ".join(ans), 45))
+                }
+            )
         except:
             import traceback
             traceback.print_exc()
-            pass
-        finally:
-            noticer.clear()
 
 
 if __name__ == '__main__':

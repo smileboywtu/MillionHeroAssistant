@@ -2,8 +2,8 @@ data_directory: "screenshots"
 
 ### 1代表灰度处理， 2代表二值化处理，如果需要使用二值化，需要将2放到前面, 0不使用
 image_compress_level:
-  - 1
   - 0
+  - 1
   - 2
 
 ### 0 表示普通识别，配合compress_level 1使用
@@ -30,11 +30,16 @@ crop_areas:
       - 0.134375
       - 0.95648148
       - 0.5203125
+    "UC答题":
+      - 0.074
+      - 0.186
+      - 0.926
+      - 0.683
 
 ### baidu orc
-app_id: "自己的"
-app_key: "自己的"
-app_secret: "自己的"
+app_id: "10712738"
+app_key: "98QhwoCzoZxKoZbX5XWNPld4"
+app_secret: "MGYLv1BeHjWOGFc9IjZPfzuhlPlaBEWA "
 
 ### ocr.space
 api_key: "6c851da45688957"

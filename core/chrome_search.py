@@ -50,7 +50,6 @@ def run_browser(closer, noticer, keyword_exchange):
         while True:
             if closer.is_set():
                 browser.quit()
-                browser
 
             noticer.wait(timeout=1)
             if noticer.is_set():

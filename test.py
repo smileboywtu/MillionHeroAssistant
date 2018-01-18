@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-import operator
 import unittest
 from unittest import TestCase
 
-from terminaltables import AsciiTable
-
-from core.crawler.baiduzhidao import baidu_count
 from main import pre_process_question
 
 
@@ -21,12 +17,12 @@ class OcrTestCase(TestCase):
         from core.ocr.baiduocr import get_text_from_image
 
         print("test baidu ocr")
-        app_id = "10661627"
-        app_key = "h5xcL0m4TB8fiiFWoysn7uxt"
-        app_secret = "HGA1cgXzz80douKQUpII7K77TYWSGcfW"
+        app_id = "10712738"
+        app_key = "98QhwoCzoZxKoZbX5XWNPld4"
+        app_secret = "MGYLv1BeHjWOGFc9IjZPfzuhlPlaBEWA"
 
         with open("screenshots/text_area.png", "rb") as fp:
-            message = get_text_from_image(fp.read(), app_id, app_key, app_secret, 5)
+            message = get_text_from_image(fp.read(), app_id, app_key, app_secret, 0, 10)
             print(message)
 
     def test_detect_direction(self):
@@ -38,12 +34,15 @@ class OcrTestCase(TestCase):
         from core.ocr.baiduocr import get_text_from_image
 
         print("test baidu ocr direction")
-        app_id = "10661627"
-        app_key = "h5xcL0m4TB8fiiFWoysn7uxt"
-        app_secret = "HGA1cgXzz80douKQUpII7K77TYWSGcfW"
+        app_id = "10712738"
+        app_key = "98QhwoCzoZxKoZbX5XWNPld4"
+        app_secret = "MGYLv1BeHjWOGFc9IjZPfzuhlPlaBEWA "
 
-        with open("screenshots/direction.png", "rb") as fp:
-            message = get_text_from_image(fp.read(), app_id, app_key, app_secret, 5)
+        with open("screenshots/screenshot.png", "rb") as fp:
+            import time
+            start = int(time.time())
+            message = get_text_from_image(fp.read(), app_id, app_key, app_secret, 10)
+            print("time spend: ", int(time.time())-start)
             print(message)
 
     def test_image_count(self):
