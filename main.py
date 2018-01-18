@@ -14,7 +14,7 @@ from argparse import ArgumentParser
 from datetime import datetime
 from functools import partial
 from multiprocessing import Queue, Event, Pipe
-
+from PIL import Image
 from config import api_key, enable_chrome, use_monitor, image_compress_level, crop_areas
 from config import api_version
 from config import app_id
@@ -22,7 +22,7 @@ from config import app_key
 from config import app_secret
 from config import data_directory
 from config import prefer
-from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text
+from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text,get_area_data
 from core.check_words import parse_false
 from core.chrome_search import run_browser
 from core.crawler.baiduzhidao import baidu_count_daemon
@@ -92,6 +92,12 @@ def pre_process_question(keyword):
     keyword = "".join([e.strip("\r\n") for e in keywords if e])
     return keyword
 
+def convertjpg(jpgfile,outdir):
+    img=Image.open(jpgfile)
+    width=img.size[0]
+    height=img.size[1]
+    new_img=img.resize((width/10,height/10),Image.BILINEAR)
+    new_img.save(os.path.join(outdir,os.path.basename(jpgfile)))
 
 def main():
     args = parse_args()
@@ -141,10 +147,23 @@ def main():
             crop_area=crop_areas[game_type],
             use_monitor=use_monitor
         )
+        start1 = time.time()
         keywords = get_text_from_image(
             image_data=text_binary,
             timeout=timeout
         )
+        end1 = time.time()
+        print (end1-start1)
+        text_area_file_scale="./screenshots/text_area_scale.png"
+        convertjpg("./screenshots/text_area.png",text_area_file_scale)
+        text_binary_scale=get_area_data(text_area_file_scale)
+        start2 = time.time()
+        keywords = get_text_from_image(
+            image_data=text_binary_scale,
+            timeout=timeout
+        )
+        end2 = time.time()
+        print (end2-start2)
         if not keywords:
             print("text not recognize")
             return
