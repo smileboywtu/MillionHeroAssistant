@@ -43,7 +43,6 @@ def baidu_count(keyword, answers, timeout=5):
     :param timeout:
     :return:
     """
-    print(keyword, answers)
     headers = {
         "Host": "www.baidu.com",
         "Cache-Control": "max-age=0",

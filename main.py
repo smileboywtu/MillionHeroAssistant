@@ -7,13 +7,14 @@
 
 """
 import multiprocessing
+import operator
 import os
-import threading
 import time
 from argparse import ArgumentParser
 from datetime import datetime
 from functools import partial
-from multiprocessing import Queue, Event, Pipe
+from multiprocessing import Event, Pipe
+from textwrap import wrap
 
 from config import api_key, enable_chrome, use_monitor, image_compress_level, crop_areas
 from config import api_version
@@ -25,12 +26,12 @@ from config import prefer
 from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text
 from core.check_words import parse_false
 from core.chrome_search import run_browser
-from core.crawler.baiduzhidao import baidu_count_daemon
-from core.crawler.crawl import jieba_initialize, crawler_daemon
+from core.crawler.baiduzhidao import baidu_count
+from core.crawler.crawl import jieba_initialize, kwquery
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
 ## jieba init
-from dynamic_table import print_terminal, clear_screen
+from dynamic_table import clear_screen
 
 jieba_initialize()
 
@@ -103,25 +104,25 @@ def main():
 
     check_screenshot(filename="screenshot.png", directory=data_directory)
 
-    stdout_queue = Queue(10)
-    ## spaw baidu count
-    baidu_queue = Queue(5)
-    baidu_search_job = multiprocessing.Process(target=baidu_count_daemon,
-                                               args=(baidu_queue, stdout_queue, timeout))
-    baidu_search_job.daemon = True
-    baidu_search_job.start()
-
-    ## spaw crawler
-    knowledge_queue = Queue(5)
-    knowledge_craw_job = multiprocessing.Process(target=crawler_daemon,
-                                                 args=(knowledge_queue, stdout_queue))
-    knowledge_craw_job.daemon = True
-    knowledge_craw_job.start()
-
-    ## output threading
-    output_job = threading.Thread(target=print_terminal, args=(stdout_queue,))
-    output_job.daemon = True
-    output_job.start()
+    # stdout_queue = Queue(10)
+    # ## spaw baidu count
+    # baidu_queue = Queue(5)
+    # baidu_search_job = multiprocessing.Process(target=baidu_count_daemon,
+    #                                            args=(baidu_queue, stdout_queue, timeout))
+    # baidu_search_job.daemon = True
+    # baidu_search_job.start()
+    #
+    # ## spaw crawler
+    # knowledge_queue = Queue(5)
+    # knowledge_craw_job = multiprocessing.Process(target=crawler_daemon,
+    #                                              args=(knowledge_queue, stdout_queue))
+    # knowledge_craw_job.daemon = True
+    # knowledge_craw_job.start()
+    #
+    # ## output threading
+    # output_job = threading.Thread(target=print_terminal, args=(stdout_queue,))
+    # output_job.daemon = True
+    # output_job.start()
 
     if enable_chrome:
         closer = Event()
@@ -154,39 +155,63 @@ def main():
         if game_type == "UC答题":
             answers = map(lambda a: a.rsplit(":")[-1], answers)
 
-        ### refresh question
-        stdout_queue.put({
-            "type": 0,
-            "data": "{0}\n{1}".format(question, "\n".join(answers))
-        })
+        print("~" * 60)
+        print("{0}\n{1}".format(real_question, "\n".join(answers)))
+        print("~" * 60)
 
-        # notice baidu and craw
-        baidu_queue.put((
-            question, answers, true_flag
-        ))
-        knowledge_queue.put(question)
+        # ### refresh question
+        # stdout_queue.put({
+        #     "type": 0,
+        #     "data": "{0}\n{1}".format(question, "\n".join(answers))
+        # })
+        #
+        # # notice baidu and craw
+        # baidu_queue.put((
+        #     question, answers, true_flag
+        # ))
+        # knowledge_queue.put(question)
 
         if enable_chrome:
             writer.send(question)
             noticer.set()
 
+        summary = baidu_count(question, answers, timeout=timeout)
+        summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
+        if true_flag:
+            recommend = "{0}\n{1}".format(
+                "肯定回答(**)： {0}".format(summary_li[0][0]),
+                "否定回答(  )： {0}".format(summary_li[-1][0]))
+        else:
+            recommend = "{0}\n{1}".format(
+                "肯定回答(  )： {0}".format(summary_li[0][0]),
+                "否定回答(**)： {0}".format(summary_li[-1][0]))
+        print("*" * 60)
+        print(recommend)
+        print("*" * 60)
+
+        ans = kwquery(real_question)
+        print("-" * 60)
+        print(wrap(" ".join(ans), 60))
+        print("-" * 60)
+
         end = time.time()
-        stdout_queue.put({
-            "type": 3,
-            "data": "use {0} 秒".format(end - start)
-        })
+        # stdout_queue.put({
+        #     "type": 3,
+        #     "data": "use {0} 秒".format(end - start)
+        # })
+        print("use {0} 秒".format(end - start))
         save_screen(
             directory=data_directory
         )
         time.sleep(1)
 
     print("""
-        请选择答题节目:
-          1. 百万英雄
-          2. 冲顶大会
-          3. 芝士超人
-          4. UC答题
-        """)
+            请选择答题节目:
+              1. 百万英雄
+              2. 冲顶大会
+              3. 芝士超人
+              4. UC答题
+            """)
     game_type = input("输入节目序号: ")
     if game_type == "1":
         game_type = '百万英雄'
