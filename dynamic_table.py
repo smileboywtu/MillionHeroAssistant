@@ -6,10 +6,9 @@
 dynamic command line output
 
 """
-
 import os
-import platform
 import sys
+import platform
 
 from terminaltables import AsciiTable
 

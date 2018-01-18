@@ -43,13 +43,14 @@ def baidu_count(keyword, answers, timeout=5):
     :param timeout:
     :return:
     """
+    print(keyword, answers)
     headers = {
         "Host": "www.baidu.com",
         "Cache-Control": "max-age=0",
         "Connection": "keep-alive",
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "Upgrade-Insecure-Requests": "1",
-        "User-Agent": random.choice(Agents)
+        # "User-Agent": random.choice(Agents)
     }
     params = {
         "wd": keyword,
@@ -97,7 +98,6 @@ def baidu_count_daemon(exchage_queue, outputqueue, timeout=5):
     while True:
         question, answers, true_flag = exchage_queue.get()
         try:
-            question = " ".join(just_keep_none(question))
             summary = baidu_count(question, answers, timeout=timeout)
             summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
             if true_flag:
