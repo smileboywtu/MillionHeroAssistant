@@ -71,7 +71,7 @@ def analyze_current_screen_text(crop_area, directory=".", compress_level=1, use_
     capture_screen_v2(screenshot_filename, directory)
     parse_answer_area(os.path.join(directory, screenshot_filename),
                       save_text_area, compress_level, crop_area)
-    return get_area_data(save_text_area)
+    #return get_area_data(save_text_area)
 
 
 def analyze_stored_screen_text(screenshot_filename="screenshot.png", directory=".", compress_level=1):

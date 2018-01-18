@@ -92,12 +92,10 @@ def pre_process_question(keyword):
     keyword = "".join([e.strip("\r\n") for e in keywords if e])
     return keyword
 
-def convertjpg(jpgfile,outdir):
+def convertjpg(jpgfile,outfile):
     img=Image.open(jpgfile)
-    width=img.size[0]
-    height=img.size[1]
-    new_img=img.resize((width/10,height/10),Image.BILINEAR)
-    new_img.save(os.path.join(outdir,os.path.basename(jpgfile)))
+    new_img=img.resize((int(1080/5),int(1920/5)),Image.BILINEAR)
+    new_img.save(outfile)
 
 def main():
     args = parse_args()
@@ -141,29 +139,26 @@ def main():
 
     def __inner_job():
         start = time.time()
-        text_binary = analyze_current_screen_text(
+        analyze_current_screen_text(
             directory=data_directory,
             compress_level=image_compress_level[0],
             crop_area=crop_areas[game_type],
             use_monitor=use_monitor
         )
-        start1 = time.time()
-        keywords = get_text_from_image(
-            image_data=text_binary,
-            timeout=timeout
-        )
-        end1 = time.time()
-        print (end1-start1)
-        text_area_file_scale="./screenshots/text_area_scale.png"
-        convertjpg("./screenshots/text_area.png",text_area_file_scale)
+        #######################################################缩放 测试1920*1080
+        text_area_file= os.path.join(data_directory, "text_area.png")
+        text_area_file_scale = os.path.join(data_directory, "text_area_scale.png")
+        convertjpg(text_area_file,text_area_file_scale)
         text_binary_scale=get_area_data(text_area_file_scale)
         start2 = time.time()
+        ###########################################################
         keywords = get_text_from_image(
             image_data=text_binary_scale,
             timeout=timeout
         )
         end2 = time.time()
-        print (end2-start2)
+        print ("use2: %f" % (end2-start2))
+        #####################################################
         if not keywords:
             print("text not recognize")
             return
