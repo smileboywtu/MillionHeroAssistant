@@ -16,25 +16,25 @@ api_version:
 ## 最终裁剪区域可表示为 (image_width * left, image_height * top, image_width * right, image_height * bottom)
 crop_areas:
     '百万英雄':
-      - 0.05
-      - 0.115
-      - 0.949
-      - 0.656
+      - 0.074074
+      - 0.15
+      - 0.96
+      - 0.58
     '冲顶大会':
-      - 0.074
-      - 0.156
-      - 0.926
-      - 0.573
+      - 0.074074
+      - 0.140625
+      - 0.92315
+      - 0.51
     "芝士超人":
-      - 0.0509
-      - 0.156
-      - 0.949
-      - 0.625
+      - 0.034259
+      - 0.134375
+      - 0.95648148
+      - 0.5203125
 
 ### baidu orc
-app_id: "10685276"
-app_key: "TCsHhEaZH9IUZ5USYVEO37kf"
-app_secret: "1465rTMHfVCk887qlD7gmpxQDag3gIW0"
+app_id: "自己的"
+app_key: "自己的"
+app_secret: "自己的"
 
 ### ocr.space
 api_key: "6c851da45688957"
