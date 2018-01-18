@@ -186,6 +186,7 @@ def main():
                 "肯定回答(  )： {0}".format(summary_li[0][0]),
                 "否定回答(**)： {0}".format(summary_li[-1][0]))
         print("*" * 60)
+        print("\n".join(map(lambda item: "{0}: {1}".format(item[0], item[1]), summary_li)))
         print(recommend)
         print("*" * 60)
 
