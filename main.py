@@ -161,7 +161,7 @@ def main():
         })
 
         # notice baidu and craw
-        baidu_queue.put_nowait((
+        baidu_queue.put((
             question, answers, true_flag
         ))
         knowledge_queue.put(question)
