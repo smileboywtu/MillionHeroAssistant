@@ -8,8 +8,8 @@ dynamic command line output
 """
 
 import os
-import sys
 import platform
+import sys
 
 from terminaltables import AsciiTable
 

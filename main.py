@@ -178,7 +178,7 @@ def main():
         save_screen(
             directory=data_directory
         )
-        time.time(1)
+        time.sleep(1)
 
     print("""
         请选择答题节目:

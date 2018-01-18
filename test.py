@@ -2,6 +2,7 @@
 import unittest
 from unittest import TestCase
 
+from core.crawler.baiduzhidao import baidu_count
 from main import pre_process_question
 
 
@@ -42,7 +43,7 @@ class OcrTestCase(TestCase):
             import time
             start = int(time.time())
             message = get_text_from_image(fp.read(), app_id, app_key, app_secret, 10)
-            print("time spend: ", int(time.time())-start)
+            print("time spend: ", int(time.time()) - start)
             print(message)
 
     def test_image_count(self):
@@ -92,6 +93,9 @@ class OcrTestCase(TestCase):
         question = "这个月有多少天"
         print(pre_process_question(question))
 
+    def test_baidu_word_count(self):
+        a = baidu_count("全世界第一部公映的有声动画片是？", ["威利号汽船", "小熊维尼", "猫和老鼠"])
+        print(a)
 
 if __name__ == "__main__":
     unittest.main()
