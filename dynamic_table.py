@@ -6,7 +6,6 @@
 dynamic command line output
 
 """
-
 import os
 import sys
 import platform
