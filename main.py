@@ -95,10 +95,26 @@ def pre_process_question(keyword):
     keyword = "".join([e.strip("\r\n") for e in keywords if e])
     return keyword
 
-def convertjpg(jpgfile,outfile):
-    img=Image.open(jpgfile)
-    new_img=img.resize((int(1080/3),int(1920/5)),Image.BILINEAR)
-    new_img.save(outfile)
+def printInfo():
+    print("""
+            请选择答题节目:
+              1. 百万英雄
+              2. 冲顶大会
+              3. 芝士超人
+              4. UC答题
+            """)
+    global game_type
+    game_type = input("输入节目序号: ")
+    if game_type == "1":
+        game_type = '百万英雄'
+    elif game_type == "2":
+        game_type = '冲顶大会'
+    elif game_type == "3":
+        game_type = "芝士超人"
+    elif game_type == "4":
+        game_type = "UC答题"
+    else:
+        game_type = '百万英雄'
 
 def main():
     args = parse_args()
@@ -219,30 +235,13 @@ def main():
             directory=data_directory
         )
         time.sleep(1)
-
-    print("""
-            请选择答题节目:
-              1. 百万英雄
-              2. 冲顶大会
-              3. 芝士超人
-              4. UC答题
-            """)
-    game_type = input("输入节目序号: ")
-    if game_type == "1":
-        game_type = '百万英雄'
-    elif game_type == "2":
-        game_type = '冲顶大会'
-    elif game_type == "3":
-        game_type = "芝士超人"
-    elif game_type == "4":
-        game_type = "UC答题"
-    else:
-        game_type = '百万英雄'
-
+    printInfo()
     while True:
-        enter = input("按Enter键开始，按ESC键退出...")
+        enter = input("按Enter键开始，按ESC键退出,切换游戏请输入s回车...")
         if enter == chr(27):
             break
+        if enter == 's':
+            printInfo()
         try:
             clear_screen()
             __inner_job()
