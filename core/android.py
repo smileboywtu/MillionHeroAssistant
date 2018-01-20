@@ -16,7 +16,7 @@ from datetime import datetime
 from shutil import copyfile
 
 from PIL import Image
-
+from config import enable_scale
 # SCREENSHOT_WAY 是截图方法，
 # 经过 check_screenshot 后，会自动递
 # 不需手动修改
@@ -156,8 +156,9 @@ def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
     #ak=image.fp.read()
     region = image.crop(
         (width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
-    new_img=region.resize((int(1080/3),int(1920/5)),Image.BILINEAR)
-    new_img.save(text_area_file)
+    if enable_scale:
+        region=region.resize((int(1080/3),int(1920/5)),Image.BILINEAR)
+    region.save(text_area_file)
     #image_data=region.fp.read()
     ##return image_data
     ##region.save(text_area_file)

@@ -166,8 +166,6 @@ def main():
         )
         #######################################################缩放 测试1920*1080
         text_area_file_scale= os.path.join(data_directory, "text_area.png")
-        #text_area_file_scale = os.path.join(data_directory, "text_area_scale.png")
-        #convertjpg(text_area_file,text_area_file_scale)
         text_binary_scale=get_area_data(text_area_file_scale)
         ###########################################################
         keywords = get_text_from_image(
