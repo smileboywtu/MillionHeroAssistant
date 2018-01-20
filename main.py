@@ -13,14 +13,11 @@ import time
 from argparse import ArgumentParser
 from datetime import datetime
 from functools import partial
-<<<<<<< HEAD
-from multiprocessing import Queue, Event, Pipe
 from PIL import Image
-=======
+
 from multiprocessing import Event, Pipe
 from textwrap import wrap
 
->>>>>>> upstream/master
 from config import api_key, enable_chrome, use_monitor, image_compress_level, crop_areas
 from config import api_version
 from config import app_id
@@ -100,7 +97,7 @@ def pre_process_question(keyword):
 
 def convertjpg(jpgfile,outfile):
     img=Image.open(jpgfile)
-    new_img=img.resize((int(1080/5),int(1920/5)),Image.BILINEAR)
+    new_img=img.resize((int(1080/3),int(1920/5)),Image.BILINEAR)
     new_img.save(outfile)
 
 def main():
@@ -152,18 +149,15 @@ def main():
             use_monitor=use_monitor
         )
         #######################################################缩放 测试1920*1080
-        text_area_file= os.path.join(data_directory, "text_area.png")
-        text_area_file_scale = os.path.join(data_directory, "text_area_scale.png")
-        convertjpg(text_area_file,text_area_file_scale)
+        text_area_file_scale= os.path.join(data_directory, "text_area.png")
+        #text_area_file_scale = os.path.join(data_directory, "text_area_scale.png")
+        #convertjpg(text_area_file,text_area_file_scale)
         text_binary_scale=get_area_data(text_area_file_scale)
-        start2 = time.time()
         ###########################################################
         keywords = get_text_from_image(
             image_data=text_binary_scale,
             timeout=timeout
         )
-        end2 = time.time()
-        print ("use2: %f" % (end2-start2))
         #####################################################
         if not keywords:
             print("text not recognize")
@@ -195,7 +189,9 @@ def main():
             noticer.set()
 
         summary = baidu_count(question, answers, timeout=timeout)
+
         summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
+
         if true_flag:
             recommend = "{0}\n{1}".format(
                 "肯定回答(**)： {0}".format(summary_li[0][0]),
@@ -208,12 +204,11 @@ def main():
         print("\n".join(map(lambda item: "{0}: {1}".format(item[0], item[1]), summary_li)))
         print(recommend)
         print("*" * 60)
-
         ans = kwquery(real_question)
         print("-" * 60)
         print(wrap(" ".join(ans), 60))
         print("-" * 60)
-
+        end4 = time.time()
         end = time.time()
         # stdout_queue.put({
         #     "type": 3,

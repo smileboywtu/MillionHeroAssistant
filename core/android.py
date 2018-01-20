@@ -153,10 +153,14 @@ def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
 
     width, height = image.size[0], image.size[1]
     print("screen width: {0}, screen height: {1}".format(width, height))
-
+    #ak=image.fp.read()
     region = image.crop(
         (width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
-    region.save(text_area_file)
+    new_img=region.resize((int(1080/3),int(1920/5)),Image.BILINEAR)
+    new_img.save(text_area_file)
+    #image_data=region.fp.read()
+    ##return image_data
+    ##region.save(text_area_file)
 
 
 def get_area_data(text_area_file):
