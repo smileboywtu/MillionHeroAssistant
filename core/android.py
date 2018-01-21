@@ -15,7 +15,9 @@ import sys
 from datetime import datetime
 from shutil import copyfile
 
+import numpy as np
 from PIL import Image
+from skimage import morphology
 
 from config import enable_scale
 
@@ -70,9 +72,9 @@ def analyze_current_screen_text(crop_area, directory=".", compress_level=1):
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
     capture_screen_v2(screenshot_filename, directory)
-    parse_answer_area(os.path.join(directory, screenshot_filename),
-                      save_text_area, compress_level, crop_area)
-    return get_area_data(save_text_area)
+    ok = parse_answer_area(os.path.join(directory, screenshot_filename),
+                           save_text_area, compress_level, crop_area)
+    return get_area_data(save_text_area) if ok else None
 
 
 def capture_screen_v2(filename="screenshot.png", directory="."):
@@ -126,6 +128,30 @@ def save_screen(filename="screenshot.png", directory="."):
              os.path.join(directory, datetime.now().strftime("%m%d_%H%M%S").join(os.path.splitext(filename))))
 
 
+def auto_find_crop_area(source_file):
+    """
+    1. convert to gray picture
+    2. find pixel > 200 (white) and connect
+    3. if > image/4 
+    4. find edge of question and answer
+    
+    :param source_file:
+    :return: 
+    """
+    image = Image.open(source_file)
+    width, height = image.size[0], image.size[1]
+    array_img = np.array(image)
+    ot_img = (array_img > 200)
+    obj_dtec_img = morphology.remove_small_objects(ot_img, min_size=width * height / 4, connectivity=1)
+    if np.sum(obj_dtec_img) < 1000:
+        return []
+    return [
+        np.where(obj_dtec_img * 1.0 > 0)[1].min() + 20,
+        np.where(obj_dtec_img * 1.0 > 0)[0].min(),
+        np.where(obj_dtec_img * 1.0 > 0)[1].max(),
+        np.where(obj_dtec_img * 1.0 > 0)[0].max()]
+
+
 def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
     """
     crop the answer area
@@ -134,16 +160,31 @@ def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
     """
 
     image = Image.open(source_file)
-    if compress_level == 1:
-        image = image.convert("L")
-    elif compress_level == 2:
-        image = image.convert("1")
-
     width, height = image.size[0], image.size[1]
-    region = image.crop((width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
+
+    if not crop_area:
+        image = image.convert("L")
+        array_img = np.array(image)
+        ot_img = (array_img > 200)
+        obj_dtec_img = morphology.remove_small_objects(ot_img, min_size=width * height / 4, connectivity=1)
+        if np.sum(obj_dtec_img) < 1000:
+            return False
+        region = image.crop((
+            np.where(obj_dtec_img * 1.0 > 0)[1].min() + 20,
+            np.where(obj_dtec_img * 1.0 > 0)[0].min() + 220,
+            np.where(obj_dtec_img * 1.0 > 0)[1].max(),
+            np.where(obj_dtec_img * 1.0 > 0)[0].max()))
+    else:
+        if compress_level == 1:
+            image = image.convert("L")
+        elif compress_level == 2:
+            image = image.convert("1")
+        region = image.crop((width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
+
     if enable_scale:
         region = region.resize((int(1080 / 3), int(1920 / 5)), Image.BILINEAR)
     region.save(text_area_file)
+    return True
 
 
 def get_area_data(text_area_file):

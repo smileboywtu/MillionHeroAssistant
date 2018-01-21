@@ -124,6 +124,25 @@ class OcrTestCase(TestCase):
         for i in postag("8点钟"):
             print(i)
 
+    def test_autocrop(self):
+        from PIL import Image
+        import numpy as np
+        from skimage import morphology
+        image = Image.open("screenshots/screenshot.png")
+        width, height = image.size[0], image.size[1]
+        array_img = np.array(image)
+        ot_img = (array_img > 200)
+        obj_dtec_img = morphology.remove_small_objects(ot_img, min_size=width * height / 4, connectivity=1)
+        import pdb
+        pdb.set_trace()
+        if np.sum(obj_dtec_img) < 1000:
+            print("can't find question")
+        print([
+            np.where(obj_dtec_img * 1.0 > 0)[1].min() + 20,
+            np.where(obj_dtec_img * 1.0 > 0)[0].min(),
+            np.where(obj_dtec_img * 1.0 > 0)[1].max(),
+            np.where(obj_dtec_img * 1.0 > 0)[0].max()])
+
 
 if __name__ == "__main__":
     unittest.main()
