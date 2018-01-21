@@ -5,18 +5,22 @@
     Baidu zhidao searcher
 
 """
+import logging
 import operator
 import random
 
 import requests
 
 from core.crawler import text_process as T
+from utils import stdout_template
 
 Agents = (
     "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0",
     "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.71 Safari/537.36"
 )
+
+logger = logging.getLogger("assistant")
 
 
 def count_key_words(text, keywords):
@@ -49,15 +53,15 @@ def baidu_count(keyword, answers, timeout=5):
         "Connection": "keep-alive",
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "Upgrade-Insecure-Requests": "1",
-        # "User-Agent": random.choice(Agents)
+        "User-Agent": random.choice(Agents)
     }
     params = {
         "wd": keyword,
         "ie": "utf-8"
     }
-    resp = requests.get("http://www.baidu.com/s", params=params, headers=headers, timeout=timeout)
+    resp = requests.get("http://www.baidu.com/s", params=params, headers=headers)
     if not resp.ok:
-        print("baidu search error")
+        logger.error("Get BaiDu HTTP ERROR")
         return {
             ans: 0
             for ans in answers
@@ -93,7 +97,6 @@ def baidu_count_daemon(exchage_queue, outputqueue, timeout=5):
     
     :return: 
     """
-
     while True:
         question, answers, true_flag = exchage_queue.get()
         try:
@@ -107,13 +110,9 @@ def baidu_count_daemon(exchage_queue, outputqueue, timeout=5):
                 recommend = "{0}\n{1}".format(
                     "肯定回答(  )： {0}".format(summary_li[0][0]),
                     "否定回答(**)： {0}".format(summary_li[-1][0]))
-            outputqueue.put({
-                "type": 1,
-                "data": "{0}\n{1}".format(
-                    "\n".join(map(lambda item: "{0}: {1}".format(item[0], item[1]), summary_li)),
-                    recommend
-                )
-            })
-        except:
-            import traceback
-            traceback.print_exc()
+            outputqueue.put(stdout_template.BAIDU_TPL.format(
+                "\n".join(map(lambda item: "{0}: {1}".format(item[0], item[1]), summary_li)),
+                recommend
+            ))
+        except Exception as e:
+            logger.error(str(e), exc_info=True)

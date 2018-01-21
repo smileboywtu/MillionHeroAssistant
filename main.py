@@ -6,15 +6,15 @@
     Xi Gua video Million Heroes
 
 """
+import logging.handlers
 import multiprocessing
-import operator
 import os
+import threading
 import time
 from argparse import ArgumentParser
 from datetime import datetime
 from functools import partial
-from multiprocessing import Event, Pipe
-from textwrap import wrap
+from multiprocessing import Event, Pipe, Queue
 
 from config import api_key, enable_chrome, use_monitor, image_compress_level, crop_areas
 from config import api_version
@@ -26,13 +26,21 @@ from config import prefer
 from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text
 from core.check_words import parse_false
 from core.chrome_search import run_browser
-from core.crawler.baiduzhidao import baidu_count
-from core.crawler.crawl import jieba_initialize, kwquery
+from core.crawler.baiduzhidao import baidu_count_daemon
+from core.crawler.crawl import jieba_initialize, crawler_daemon
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
-## jieba init
-from dynamic_table import clear_screen
+from utils import stdout_template
+from utils.backup import save_question_answers_to_file
+from utils.process_stdout import ProcessStdout
 
+logger = logging.getLogger("assistant")
+handler = logging.handlers.WatchedFileHandler("assistant.log")
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+## jieba init
 jieba_initialize()
 
 if prefer[0] == "baidu":
@@ -94,6 +102,28 @@ def pre_process_question(keyword):
     return keyword
 
 
+def prompt_message():
+    global game_type
+    print("""
+请选择答题节目:
+    1. 百万英雄
+    2. 冲顶大会
+    3. 芝士超人
+    4. UC答题
+""")
+    game_type = input("输入节目序号: ")
+    if game_type == "1":
+        game_type = '百万英雄'
+    elif game_type == "2":
+        game_type = '冲顶大会'
+    elif game_type == "3":
+        game_type = "芝士超人"
+    elif game_type == "4":
+        game_type = "UC答题"
+    else:
+        game_type = '百万英雄'
+
+
 def main():
     args = parse_args()
     timeout = args.timeout
@@ -104,25 +134,25 @@ def main():
 
     check_screenshot(filename="screenshot.png", directory=data_directory)
 
-    # stdout_queue = Queue(10)
-    # ## spaw baidu count
-    # baidu_queue = Queue(5)
-    # baidu_search_job = multiprocessing.Process(target=baidu_count_daemon,
-    #                                            args=(baidu_queue, stdout_queue, timeout))
-    # baidu_search_job.daemon = True
-    # baidu_search_job.start()
-    #
-    # ## spaw crawler
-    # knowledge_queue = Queue(5)
-    # knowledge_craw_job = multiprocessing.Process(target=crawler_daemon,
-    #                                              args=(knowledge_queue, stdout_queue))
-    # knowledge_craw_job.daemon = True
-    # knowledge_craw_job.start()
-    #
-    # ## output threading
-    # output_job = threading.Thread(target=print_terminal, args=(stdout_queue,))
-    # output_job.daemon = True
-    # output_job.start()
+    std_pipe = ProcessStdout()
+    ## spaw baidu count
+    baidu_queue = Queue(5)
+    baidu_search_job = multiprocessing.Process(target=baidu_count_daemon,
+                                               args=(baidu_queue, std_pipe.queue, timeout))
+    baidu_search_job.daemon = True
+    baidu_search_job.start()
+
+    ## spaw crawler
+    knowledge_queue = Queue(5)
+    knowledge_craw_job = multiprocessing.Process(target=crawler_daemon,
+                                                 args=(knowledge_queue, std_pipe.queue))
+    knowledge_craw_job.daemon = True
+    knowledge_craw_job.start()
+
+    ## output threading
+    output_job = threading.Thread(target=std_pipe.run_forever)
+    output_job.daemon = True
+    output_job.start()
 
     if enable_chrome:
         closer = Event()
@@ -136,14 +166,13 @@ def main():
 
     def __inner_job():
         start = time.time()
-        text_binary = analyze_current_screen_text(
+        image_binary = analyze_current_screen_text(
             directory=data_directory,
             compress_level=image_compress_level[0],
-            crop_area=crop_areas[game_type],
-            use_monitor=use_monitor
+            crop_area=crop_areas[game_type]
         )
         keywords = get_text_from_image(
-            image_data=text_binary,
+            image_data=image_binary,
             timeout=timeout
         )
         if not keywords:
@@ -155,88 +184,33 @@ def main():
         if game_type == "UC答题":
             answers = map(lambda a: a.rsplit(":")[-1], answers)
 
-        print("~" * 60)
-        print("{0}\n{1}".format(real_question, "\n".join(answers)))
-        print("~" * 60)
+        std_pipe.write(stdout_template.QUESTION_TPL.format(real_question, "\n".join(answers)))
 
-        # ### refresh question
-        # stdout_queue.put({
-        #     "type": 0,
-        #     "data": "{0}\n{1}".format(question, "\n".join(answers))
-        # })
-        #
-        # # notice baidu and craw
-        # baidu_queue.put((
-        #     question, answers, true_flag
-        # ))
-        # knowledge_queue.put(question)
-
+        # notice baidu and craw
+        baidu_queue.put((
+            question, answers, true_flag
+        ))
+        knowledge_queue.put(question)
         if enable_chrome:
             writer.send(question)
             noticer.set()
 
-        summary = baidu_count(question, answers, timeout=timeout)
-        summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
-        if true_flag:
-            recommend = "{0}\n{1}".format(
-                "肯定回答(**)： {0}".format(summary_li[0][0]),
-                "否定回答(  )： {0}".format(summary_li[-1][0]))
-        else:
-            recommend = "{0}\n{1}".format(
-                "肯定回答(  )： {0}".format(summary_li[0][0]),
-                "否定回答(**)： {0}".format(summary_li[-1][0]))
-        print("*" * 60)
-        print("\n".join(map(lambda item: "{0}: {1}".format(item[0], item[1]), summary_li)))
-        print(recommend)
-        print("*" * 60)
-
-        ans = kwquery(real_question)
-        print("-" * 60)
-        print(wrap(" ".join(ans), 60))
-        print("-" * 60)
-
         end = time.time()
-        # stdout_queue.put({
-        #     "type": 3,
-        #     "data": "use {0} 秒".format(end - start)
-        # })
-        print("use {0} 秒".format(end - start))
-        save_screen(
-            directory=data_directory
-        )
-        time.sleep(1)
+        std_pipe.write(stdout_template.TIME_CONSUME_TPL.format(end - start))
+        save_screen(directory=data_directory)
+        save_question_answers_to_file(real_question, answers, directory=data_directory)
 
-    print("""
-            请选择答题节目:
-              1. 百万英雄
-              2. 冲顶大会
-              3. 芝士超人
-              4. UC答题
-            """)
-    game_type = input("输入节目序号: ")
-    if game_type == "1":
-        game_type = '百万英雄'
-    elif game_type == "2":
-        game_type = '冲顶大会'
-    elif game_type == "3":
-        game_type = "芝士超人"
-    elif game_type == "4":
-        game_type = "UC答题"
-    else:
-        game_type = '百万英雄'
-
+    prompt_message()
     while True:
-        enter = input("按Enter键开始，按ESC键退出...")
+        enter = input("按Enter键开始，切换游戏请输入s，按ESC键退出...\n")
         if enter == chr(27):
             break
+        if enter == 's':
+            prompt_message()
         try:
-            clear_screen()
             __inner_job()
         except Exception as e:
-            import traceback
-
-            traceback.print_exc()
-            print(str(e))
+            logger.error(str(e), exc_info=True)
 
     print("欢迎下次使用")
     if enable_chrome:

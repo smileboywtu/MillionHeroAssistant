@@ -36,3 +36,6 @@ with open("config.yaml", "rb") as reader:
 
     ### 是否使用夜神模拟器
     use_monitor = config["use_monitor"]
+
+    ### 是否图片缩放
+    enable_scale = config["enable_scale"]

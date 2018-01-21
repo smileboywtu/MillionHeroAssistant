@@ -1,8 +1,5 @@
 # coding:utf8
 
-import re
-import urllib
-
 import requests
 from bs4 import BeautifulSoup
 
@@ -51,11 +48,6 @@ def get_html_bingwd(url):
     return soup_bingwd
 
 
-'''
-获取百度搜索的结果
-'''
-
-
 def get_html_baidu(url):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686)Gecko/20071127 Firefox/2.0.0.11'}
     soup_baidu = BeautifulSoup(requests.get(url=url, headers=headers).content.decode('utf-8'), "lxml")
@@ -64,11 +56,6 @@ def get_html_baidu(url):
     [s.extract() for s in soup_baidu(['script', 'style', 'img'])]
     # print(soup.prettify())
     return soup_baidu
-
-
-'''
-获取Bing搜索的结果
-'''
 
 
 def get_html_bing(url):
@@ -81,27 +68,8 @@ def get_html_bing(url):
     return soup_bing
 
 
-'''
-print answer
-'''
-
-
-def ptranswer(ans, ifhtml):
-    result = ''
-    # print ans
-    for answer in ans:
-        if ifhtml:
-            print(answer)
-        else:
-            if answer == u'\n':
-                continue
-            p = re.compile('<[^>]+>')
-            result += p.sub("", answer.string).encode('utf8')
-    return result
-
-
-def ltptools(args):
-    url_get_base = "http://api.ltp-cloud.com/analysis/"
-    result = urllib.urlopen(url_get_base, urllib.urlencode(args))  # POST method
-    content = result.read().strip()
-    return content
+def get_html_sougo(url):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.71 Safari/537.36"}
+    soup_sougou = BeautifulSoup(requests.get(url=url, headers=headers).text, "lxml")
+    return soup_sougou

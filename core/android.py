@@ -17,6 +17,8 @@ from shutil import copyfile
 
 from PIL import Image
 
+from config import enable_scale
+
 # SCREENSHOT_WAY 是截图方法，
 # 经过 check_screenshot 后，会自动递
 # 不需手动修改
@@ -59,31 +61,17 @@ def check_screenshot(filename, directory):
         check_screenshot(filename=filename, directory=directory)
 
 
-def analyze_current_screen_text(crop_area, directory=".", compress_level=1, use_monitor=False):
+def analyze_current_screen_text(crop_area, directory=".", compress_level=1):
     """
     capture the android screen now
 
     :return:
     """
-    print("capture time: ", datetime.now().strftime("%H:%M:%S"))
     screenshot_filename = "screenshot.png"
     save_text_area = os.path.join(directory, "text_area.png")
     capture_screen_v2(screenshot_filename, directory)
     parse_answer_area(os.path.join(directory, screenshot_filename),
                       save_text_area, compress_level, crop_area)
-    return get_area_data(save_text_area)
-
-
-def analyze_stored_screen_text(screenshot_filename="screenshot.png", directory=".", compress_level=1):
-    """
-    reload screen from stored picture to store
-    :param directory:
-    :param compress_level:
-    :return:
-    """
-    save_text_area = os.path.join(directory, "text_area.png")
-    parse_answer_area(os.path.join(
-        directory, screenshot_filename), save_text_area, compress_level)
     return get_area_data(save_text_area)
 
 
@@ -152,10 +140,9 @@ def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
         image = image.convert("1")
 
     width, height = image.size[0], image.size[1]
-    print("screen width: {0}, screen height: {1}".format(width, height))
-
-    region = image.crop(
-        (width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
+    region = image.crop((width * crop_area[0], height * crop_area[1], width * crop_area[2], height * crop_area[3]))
+    if enable_scale:
+        region = region.resize((int(1080 / 3), int(1920 / 5)), Image.BILINEAR)
     region.save(text_area_file)
 
 
