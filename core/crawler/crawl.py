@@ -158,7 +158,17 @@ def kwquery(query):
         return answer
 
     # 获取搜狗的答案
-    soup_sougou= To.get
+    soup_sougou = To.get_html_sougo("https://www.sogou.com/web?query=" + quote(query))
+    answer_elements = soup_sougou.find_all("div", class_="vrwrap")
+    for element in answer_elements:
+        for best in element.find_all("div", class_="str-text-info"):
+            if best.find("i", "str-green-skin"):
+                answer.append(best.span.get_text())
+                flag = 1
+                break
+
+    if flag == 1:
+        return answer
 
     # 获取bing的摘要
     soup_bing = To.get_html_bing('https://www.bing.com/search?q=' + quote(query))

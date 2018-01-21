@@ -106,10 +106,23 @@ class OcrTestCase(TestCase):
         """
         import requests
         from bs4 import BeautifulSoup
-        resp = requests.get("https://www.sogou.com/web?query=36摄氏度等于多少华氏度")
+        resp = requests.get("https://www.sogou.com/web?query=全世界第一部公映的有声动画片是")
         soup = BeautifulSoup(resp.content, "lxml")
-        import pdb
-        pdb.set_trace()
+        answer_elements = soup.find_all("div", class_="vrwrap")
+        for element in answer_elements:
+            for best in element.find_all("div", class_="str-text-info"):
+                if best.find("i", "str-green-skin"):
+                    print(best.span.get_text())
+
+    def test_pseg(self):
+        """
+        test pseg for some words
+        
+        :return: 
+        """
+        from core.crawler.text_process import postag
+        for i in postag("8点钟"):
+            print(i)
 
 
 if __name__ == "__main__":

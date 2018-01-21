@@ -34,8 +34,10 @@ def just_keep_none(answer):
     words = T.postag(answer)
     final_none = []
     for word in words:
-        if "n" in word.flag or "v" in word.flag:
+        if "n" in word.flag or "a" in word.flag or "x" in word.flag or "q" in word.flag:
             final_none.append(word.word)
+    if final_none:
+        final_none.append(answer)
     return [answer] if not final_none else final_none
 
 
@@ -67,12 +69,15 @@ def baidu_count(keyword, answers, timeout=5):
             for ans in answers
         }
 
-    answers_li = list(map(just_keep_none, answers))
+    # answers_li = list(map(just_keep_none, answers))
+    # summary = {
+    #     ans: count_key_words(resp.text, ans_li)
+    #     for ans, ans_li in zip(answers, answers_li)
+    # }
     summary = {
-        ans: count_key_words(resp.text, ans_li)
-        for ans, ans_li in zip(answers, answers_li)
+        ans: resp.text.count(ans)
+        for ans in answers
     }
-
     if all([cnt == 0 for cnt in summary.values()]):
         return summary
 
