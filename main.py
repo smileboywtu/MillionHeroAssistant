@@ -124,7 +124,7 @@ def prompt_message():
     elif game_type == "5":
         game_type = "自适应"
     else:
-        game_type = '百万英雄'
+        game_type = '自适应'
 
 
 def main():

@@ -2,7 +2,7 @@
 import unittest
 from unittest import TestCase
 
-from core.crawler.baiduzhidao import baidu_count
+from core.crawler.baiduzhidao import baidu_count, get_rid_of_x
 from main import pre_process_question
 
 
@@ -121,7 +121,8 @@ class OcrTestCase(TestCase):
         :return: 
         """
         from core.crawler.text_process import postag
-        for i in postag("8点钟"):
+        print(get_rid_of_x(["A你好啊", "6点钟"]))
+        for i in postag("6点钟"):
             print(i)
 
     def test_autocrop(self):

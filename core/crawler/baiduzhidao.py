@@ -30,6 +30,19 @@ def count_key_words(text, keywords):
     return total_count
 
 
+def get_rid_of_x(answers):
+    """
+    Get rid of x flag in answer
+    
+    :param answers: 
+    :return: 
+    """
+    final = []
+    for ans in answers:
+        final.append("".join([ans.word for ans in T.postag(ans) if "x" not in ans.flag]))
+    return final
+
+
 def just_keep_none(answer):
     words = T.postag(answer)
     final_none = []
@@ -79,7 +92,11 @@ def baidu_count(keyword, answers, timeout=5):
         for ans in answers
     }
     if all([cnt == 0 for cnt in summary.values()]):
-        return summary
+        answers = get_rid_of_x(answers)
+        return {
+            ans: resp.text.count(ans)
+            for ans in answers
+        }
 
     default = list(summary.values())[0]
     if all([value == default for value in summary.values()]):
