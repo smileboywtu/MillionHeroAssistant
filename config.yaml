@@ -9,7 +9,7 @@ image_compress_level:
 ### 0 表示普通识别，配合compress_level 1使用
 ### 1 标识精确识别，精确识别建议配合image_compress_level 2使用
 api_version:
-  - 1
+  - 0
   - 1
 
 ## 图像比例裁剪区域, (left, top, right, bottom)
@@ -52,7 +52,7 @@ prefer:
   - ocrspace
 
 ### enable chrome
-enable_chrome: false
+enable_chrome: true
 
 ### 是否使用夜神模拟器
 use_monitor: false
