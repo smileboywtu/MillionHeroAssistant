@@ -23,7 +23,7 @@ from config import app_key
 from config import app_secret
 from config import data_directory
 from config import prefer
-from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text
+from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text,get_area_data
 from core.check_words import parse_false
 from core.chrome_search import run_browser
 from core.crawler.baiduzhidao import baidu_count_daemon
@@ -101,6 +101,26 @@ def pre_process_question(keyword):
     keyword = "".join([e.strip("\r\n") for e in keywords if e])
     return keyword
 
+def printInfo():
+    print("""
+            请选择答题节目:
+              1. 百万英雄
+              2. 冲顶大会
+              3. 芝士超人
+              4. UC答题
+            """)
+    global game_type
+    game_type = input("输入节目序号: ")
+    if game_type == "1":
+        game_type = '百万英雄'
+    elif game_type == "2":
+        game_type = '冲顶大会'
+    elif game_type == "3":
+        game_type = "芝士超人"
+    elif game_type == "4":
+        game_type = "UC答题"
+    else:
+        game_type = '百万英雄'
 
 def prompt_message():
     global game_type
