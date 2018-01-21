@@ -26,7 +26,7 @@ from config import prefer
 from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text
 from core.check_words import parse_false
 from core.chrome_search import run_browser
-from core.crawler.baiduzhidao import baidu_count_daemon
+from core.crawler.pmi import baidu_count_daemon
 from core.crawler.crawl import jieba_initialize, crawler_daemon
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
@@ -52,7 +52,7 @@ if prefer[0] == "baidu":
                                   timeout=5)
 
 elif prefer[0] == "ocrspace":
-    get_test_from_image = partial(ocrspace_get_text, api_key=api_key)
+    get_text_from_image = partial(ocrspace_get_text, api_key=api_key)
 
 
 def parse_args():

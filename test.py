@@ -2,8 +2,9 @@
 import unittest
 from unittest import TestCase
 
-from core.crawler.baiduzhidao import baidu_count, get_rid_of_x
+from core.crawler.pmi import baidu_count, get_rid_of_x
 from main import pre_process_question
+from utils.backup import get_qa_list
 
 
 class OcrTestCase(TestCase):
@@ -143,6 +144,12 @@ class OcrTestCase(TestCase):
             np.where(obj_dtec_img * 1.0 > 0)[0].min(),
             np.where(obj_dtec_img * 1.0 > 0)[1].max(),
             np.where(obj_dtec_img * 1.0 > 0)[0].max()])
+
+    def test_getqa(self):
+
+        qa_li = get_qa_list("screenshots/QA.txt")
+        for key, value in qa_li.items():
+            print(key, value)
 
 
 if __name__ == "__main__":

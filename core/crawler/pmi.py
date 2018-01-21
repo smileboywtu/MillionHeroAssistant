@@ -54,6 +54,41 @@ def just_keep_none(answer):
     return [answer] if not final_none else final_none
 
 
+def sougou_count(keyword, answers, timeout=5):
+    """
+    count answer number in sougou response
+    
+    :param keyword: 
+    :param answers: 
+    :param timeout: 
+    :return: 
+    """
+    headers = {
+        "User-Agent": random.choice(Agents),
+    }
+    params = {
+        "query": keyword,
+    }
+    resp = requests.get("https://www.sogou.com/web", params=params, headers=headers)
+    if not resp.ok:
+        logger.error("Get SouGou HTTP ERROR")
+        return {
+            ans: 0
+            for ans in answers
+        }
+    summary = {
+        ans: resp.text.count(ans)
+        for ans in answers
+    }
+    if all([cnt == 0 for cnt in summary.values()]):
+        answers = get_rid_of_x(answers)
+        return {
+            ans: resp.text.count(ans)
+            for ans in answers
+        }
+    return summary
+
+
 def baidu_count(keyword, answers, timeout=5):
     """
     Count the answer number from first page of baidu search
@@ -122,7 +157,12 @@ def baidu_count_daemon(exchage_queue, outputqueue, timeout=5):
     while True:
         question, answers, true_flag = exchage_queue.get()
         try:
-            summary = baidu_count(question, answers, timeout=timeout)
+            baidu_summary = baidu_count(question, answers, timeout=timeout)
+            sougou_summary = sougou_count(question, answers, timeout=timeout)
+            summary = {
+                key: baidu_summary[key] + sougou_summary[key]
+                for key in baidu_summary
+            }
             summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
             if true_flag:
                 recommend = "{0}\n{1}".format(

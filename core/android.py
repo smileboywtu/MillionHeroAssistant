@@ -165,13 +165,13 @@ def parse_answer_area(source_file, text_area_file, compress_level, crop_area):
     if not crop_area:
         image = image.convert("L")
         array_img = np.array(image)
-        ot_img = (array_img > 200)
+        ot_img = (array_img > 225)
         obj_dtec_img = morphology.remove_small_objects(ot_img, min_size=width * height / 4, connectivity=1)
         if np.sum(obj_dtec_img) < 1000:
             return False
         region = image.crop((
             np.where(obj_dtec_img * 1.0 > 0)[1].min() + 20,
-            np.where(obj_dtec_img * 1.0 > 0)[0].min() + 220,
+            np.where(obj_dtec_img * 1.0 > 0)[0].min() + 215,
             np.where(obj_dtec_img * 1.0 > 0)[1].max(),
             np.where(obj_dtec_img * 1.0 > 0)[0].max()))
     else:
