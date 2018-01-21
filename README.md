@@ -43,7 +43,7 @@
 
 ## **支持捐赠**
 
-- [微信入口](./wechatcode/liuquan_wechat.jpg)
+- [微信入口](./wechatcode/wechatpay.png)
 - [支付宝](./wechatcode/alipay.jpg)
 
 捐赠后请给我留言，如下福利：
@@ -79,6 +79,7 @@
 
 ## Release
 
+>- 2018/1/21: 增加问题备份，增加搜狗，增加图片放缩，加速，游戏切换
 >- 2018/1/18: 增加uc辅助，另外修复统计bug
 >- 2018/1/15: 增加芝士大会的支持，另外增加特别关键字
 >- 2018/1/14: 新增知识库功能, 内置adb，小白版一键运行
@@ -162,9 +163,16 @@ K = count(Q&A) / (count(Q) * count(A))
 群已经满了200人了，需要邀请进群。
 请优先加入qq群，很重要的改进可以加weixin:
 
+QQ 群：
+
 ![](./wechatcode/qqcode.png)
 
-请加qq后邀请：
+微信二维码：
+
+![](./wechatcode/wechat-1.png)
+
+
+QQ 号：
 
 ![](./wechatcode/liuquan.png)
 
