@@ -26,12 +26,12 @@ from config import prefer
 from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text
 from core.check_words import parse_false
 from core.chrome_search import run_browser
-from core.crawler.pmi import baidu_count_daemon
 from core.crawler.crawl import jieba_initialize, crawler_daemon
+from core.crawler.pmi import baidu_count_daemon
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
 from utils import stdout_template
-from utils.backup import save_question_answers_to_file
+from utils.backup import save_question_answers_to_file, get_qa_list, upload_to_cloud
 from utils.process_stdout import ProcessStdout
 
 logger = logging.getLogger("assistant")
@@ -102,6 +102,15 @@ def pre_process_question(keyword):
     return keyword
 
 
+def sync_data_daemon(stdoutpipe):
+    qa_li = get_qa_list("screenshots/QA.txt")
+    ok = upload_to_cloud(qa_li)
+    if ok:
+        stdoutpipe.put("同步信息到云端成功")
+    else:
+        stdoutpipe.put("同步信息到云端错误")
+
+
 def prompt_message():
     global game_type
     print("""
@@ -138,6 +147,11 @@ def main():
     check_screenshot(filename="screenshot.png", directory=data_directory)
 
     std_pipe = ProcessStdout()
+    ## start to sync qa to cloud
+    sync_job = threading.Thread(target=sync_data_daemon, args=(std_pipe.queue,))
+    sync_job.daemon = True
+    sync_job.start()
+
     ## spaw baidu count
     baidu_queue = Queue(5)
     baidu_search_job = multiprocessing.Process(target=baidu_count_daemon,

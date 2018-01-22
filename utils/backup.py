@@ -2,6 +2,8 @@
 
 import os
 
+import requests
+
 
 def save_question_answers_to_file(question, answers, directory=".", filename="QA.txt"):
     """
@@ -37,3 +39,23 @@ def get_qa_list(source_file):
         return qa_li
     finally:
         fp.close()
+
+
+def upload_to_cloud(qa_li):
+    """
+    upload data to cloud
+    
+    :param qa_li: 
+    :return: 
+    """
+    data = []
+    for q, a in qa_li.items():
+        data.append({
+            "question": q,
+            "answers": a
+        })
+    base_url = "https://bob.36deep.com/v1/assistant/question/"
+    resp = requests.post(base_url, json=data, verify=False)
+    if resp.status_code // 100 not in (2, 3):
+        return False
+    return True

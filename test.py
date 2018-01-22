@@ -4,7 +4,7 @@ from unittest import TestCase
 
 from core.crawler.pmi import baidu_count, get_rid_of_x
 from main import pre_process_question
-from utils.backup import get_qa_list
+from utils.backup import get_qa_list, upload_to_cloud
 
 
 class OcrTestCase(TestCase):
@@ -151,6 +151,7 @@ class OcrTestCase(TestCase):
         for key, value in qa_li.items():
             print(key, value)
 
+        upload_to_cloud(qa_li)
 
 if __name__ == "__main__":
     unittest.main()
