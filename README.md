@@ -8,7 +8,7 @@
 
 ### 支持任意游戏模式：
 ![](./wechatcode/run-21-1.png)
-
+![](./wechatcode/main-2.png)
 
 ### 科普性知识测试
 
