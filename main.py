@@ -154,15 +154,15 @@ def main():
 
     ## spaw baidu count
     baidu_queue = Queue(5)
-    baidu_search_job = multiprocessing.Process(target=baidu_count_daemon,
-                                               args=(baidu_queue, std_pipe.queue, timeout))
+    baidu_search_job = threading.Thread(target=baidu_count_daemon,
+                                        args=(baidu_queue, std_pipe.queue, timeout))
     baidu_search_job.daemon = True
     baidu_search_job.start()
 
     ## spaw crawler
     knowledge_queue = Queue(5)
-    knowledge_craw_job = multiprocessing.Process(target=crawler_daemon,
-                                                 args=(knowledge_queue, std_pipe.queue))
+    knowledge_craw_job = threading.Thread(target=crawler_daemon,
+                                          args=(knowledge_queue, std_pipe.queue))
     knowledge_craw_job.daemon = True
     knowledge_craw_job.start()
 

@@ -6,7 +6,7 @@
     
 """
 
-from multiprocessing import Queue
+from queue import Queue
 
 
 class ProcessStdout(object):

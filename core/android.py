@@ -18,7 +18,6 @@ from shutil import copyfile
 import numpy as np
 from PIL import Image
 from skimage import morphology
-
 from config import enable_scale
 
 # SCREENSHOT_WAY 是截图方法，
