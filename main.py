@@ -8,13 +8,15 @@
 """
 import logging.handlers
 import multiprocessing
+import operator
 import os
 import threading
 import time
 from argparse import ArgumentParser
 from datetime import datetime
 from functools import partial
-from multiprocessing import Event, Pipe, Queue
+from multiprocessing import Event, Pipe
+from textwrap import wrap
 
 from config import api_key, enable_chrome, use_monitor, image_compress_level, crop_areas
 from config import api_version
@@ -26,11 +28,10 @@ from config import prefer
 from core.android import save_screen, check_screenshot, get_adb_tool, analyze_current_screen_text
 from core.check_words import parse_false
 from core.chrome_search import run_browser
-from core.crawler.crawl import jieba_initialize, crawler_daemon
-from core.crawler.pmi import baidu_count_daemon
+from core.crawler.crawl import jieba_initialize, kwquery
+from core.crawler.pmi import baidu_count
 from core.ocr.baiduocr import get_text_from_image as bai_get_text
 from core.ocr.spaceocr import get_text_from_image as ocrspace_get_text
-from utils import stdout_template
 from utils.backup import save_question_answers_to_file, get_qa_list, upload_to_cloud
 from utils.process_stdout import ProcessStdout
 
@@ -147,29 +148,9 @@ def main():
     check_screenshot(filename="screenshot.png", directory=data_directory)
 
     std_pipe = ProcessStdout()
-    ## start to sync qa to cloud
     sync_job = threading.Thread(target=sync_data_daemon, args=(std_pipe.queue,))
     sync_job.daemon = True
     sync_job.start()
-
-    ## spaw baidu count
-    baidu_queue = Queue(5)
-    baidu_search_job = threading.Thread(target=baidu_count_daemon,
-                                        args=(baidu_queue, std_pipe.queue, timeout))
-    baidu_search_job.daemon = True
-    baidu_search_job.start()
-
-    ## spaw crawler
-    knowledge_queue = Queue(5)
-    knowledge_craw_job = threading.Thread(target=crawler_daemon,
-                                          args=(knowledge_queue, std_pipe.queue))
-    knowledge_craw_job.daemon = True
-    knowledge_craw_job.start()
-
-    ## output threading
-    output_job = threading.Thread(target=std_pipe.run_forever)
-    output_job.daemon = True
-    output_job.start()
 
     if enable_chrome:
         closer = Event()
@@ -206,19 +187,37 @@ def main():
         answers = map(lambda a: a.rsplit(":")[-1], answers)
         answers = list(map(lambda a: a.rsplit(".")[-1], answers))
 
-        std_pipe.write(stdout_template.QUESTION_TPL.format(real_question, "\n".join(answers)))
+        print("~" * 60)
+        print("{0}\n{1}".format(real_question, "\n".join(answers)))
+        print("~" * 60)
 
-        # notice baidu and craw
-        baidu_queue.put((
-            question, answers, true_flag
-        ))
-        knowledge_queue.put(question)
         if enable_chrome:
             writer.send(question)
             noticer.set()
 
+        summary = baidu_count(question, answers, timeout=timeout)
+        summary_li = sorted(summary.items(), key=operator.itemgetter(1), reverse=True)
+
+        if true_flag:
+            recommend = "{0}\n{1}".format(
+                "肯定回答(**)： {0}".format(summary_li[0][0]),
+                "否定回答(  )： {0}".format(summary_li[-1][0]))
+        else:
+            recommend = "{0}\n{1}".format(
+                "肯定回答(  )： {0}".format(summary_li[0][0]),
+                "否定回答(**)： {0}".format(summary_li[-1][0]))
+        print("*" * 60)
+        print(recommend)
+        print("*" * 60)
+
+        ans = kwquery(real_question)
+        print("-" * 60)
+        print(wrap(" ".join(ans), 60))
+        print("-" * 60)
+
         end = time.time()
-        std_pipe.write(stdout_template.TIME_CONSUME_TPL.format(end - start))
+        print("use {0} 秒".format(end - start))
+
         save_screen(directory=data_directory)
         save_question_answers_to_file(real_question, answers, directory=data_directory)
 
