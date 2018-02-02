@@ -135,8 +135,6 @@ class OcrTestCase(TestCase):
         array_img = np.array(image)
         ot_img = (array_img > 200)
         obj_dtec_img = morphology.remove_small_objects(ot_img, min_size=width * height / 4, connectivity=1)
-        import pdb
-        pdb.set_trace()
         if np.sum(obj_dtec_img) < 1000:
             print("can't find question")
         print([
@@ -152,6 +150,7 @@ class OcrTestCase(TestCase):
             print(key, value)
 
         upload_to_cloud(qa_li)
+
 
 if __name__ == "__main__":
     unittest.main()
