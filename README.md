@@ -84,8 +84,23 @@
 5. 接下来就进入百万英雄，等待有题目的时候就运行`python main.py`即可
 
 
+## Win 打包方法
+
+1. 安装`pyinstaller`工具
+``` shell
+pip install pyinstaller
+```
+
+2. 打包
+``` shell
+pyinstaller 
+```
+
+打包完成后，在dist文件夹下面会有打包后的release.
+
 ## Release
 
+>- 2018/2/18: 开源pyinstaller的配置文件
 >- 2018/1/23: 使用多线程，改善mac上面的卡顿问题
 >- 2018/1/22: 增加数据同步设置
 >- 2018/1/21: 增加问题备份，增加搜狗，增加图片放缩，加速，游戏切换，自适应
