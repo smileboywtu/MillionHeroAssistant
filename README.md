@@ -93,7 +93,7 @@ pip install pyinstaller
 
 2. 打包
 ``` shell
-pyinstaller 
+pyinstaller main.spec
 ```
 
 打包完成后，在dist文件夹下面会有打包后的release.
