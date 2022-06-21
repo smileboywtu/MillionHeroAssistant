@@ -16,5 +16,5 @@ scipy==1.0.0
 selenium==3.8.1
 six==1.11.0
 urllib3==1.22
-numpy==1.14.0
+numpy==1.22.0
 baidu-aip==2.0.0.1
