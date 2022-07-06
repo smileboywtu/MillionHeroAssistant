@@ -5,7 +5,7 @@ chardet==3.0.4
 future==0.16.0
 idna==2.6
 jieba==0.39
-lxml==4.1.1
+lxml==4.9.1
 macholib==1.9
 pefile==2017.11.5
 Pillow==5.0.0
